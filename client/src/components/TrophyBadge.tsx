@@ -3,9 +3,9 @@ import type { LeaderboardEntry } from '../types';
 import { formatPrice } from '../lib/format';
 
 const TROPHY_STYLES: Record<LeaderboardEntry['trophy'], { icon: string; ring: string; label: string }> = {
-  gold: { icon: '/gold.png', ring: 'ring-yellow-400/70 bg-yellow-400/10', label: 'Алтан' },
-  silver: { icon: '/silver.png', ring: 'ring-slate-300/70 bg-slate-300/10', label: 'Мөнгөн' },
-  bronze: { icon: '/bronze.png', ring: 'ring-orange-400/70 bg-orange-400/10', label: 'Хүрэл' },
+  gold: { icon: '/gold.png', ring: 'ring-yellow-400/70 bg-yellow-400/10', label: 'Top bidder' },
+  silver: { icon: '/silver.png', ring: 'ring-slate-300/70 bg-slate-300/10', label: 'Chaser' },
+  bronze: { icon: '/bronze.png', ring: 'ring-orange-400/70 bg-orange-400/10', label: 'Challenger' },
 };
 
 export default function TrophyBadge({ entry, index = 0 }: { entry: LeaderboardEntry; index?: number }) {
@@ -21,7 +21,7 @@ export default function TrophyBadge({ entry, index = 0 }: { entry: LeaderboardEn
         <img src={style.icon} alt={style.label} className="h-9 w-9 shrink-0 object-contain" />
         <div>
           <p className="text-sm font-semibold text-fg">{entry.name}</p>
-          <p className="text-xs text-muted">{style.label} тэргүүлэгч</p>
+          <p className="text-xs font-semibold tracking-wide text-muted">{style.label}</p>
         </div>
       </div>
       <span className="font-display text-sm font-bold text-accent">{formatPrice(entry.amount)}</span>

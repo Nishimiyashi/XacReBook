@@ -92,7 +92,8 @@ export default function AdminBookForm() {
   return (
     <div className="max-w-2xl">
       <h1 className="mb-6 font-display text-2xl font-bold text-fg">{isEdit ? 'Ном засах' : 'Шинэ ном'}</h1>
-      <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-border bg-surface p-6">
+      <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-border bg-surface p-6">
+        <SectionHeading>Үндсэн мэдээлэл</SectionHeading>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Гарчиг">
             <input
@@ -174,6 +175,7 @@ export default function AdminBookForm() {
           </div>
         </Field>
 
+        <SectionHeading>Үнэ ба хугацаа</SectionHeading>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Эхлэх үнэ (₮)">
             <input
@@ -247,5 +249,13 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
       <span className="mb-1 block text-sm font-medium text-fg">{label}</span>
       {children}
     </label>
+  );
+}
+
+function SectionHeading({ children }: { children: ReactNode }) {
+  return (
+    <p className="border-t border-border pt-6 text-[11px] font-bold uppercase tracking-widest text-muted first:border-t-0 first:pt-0">
+      {children}
+    </p>
   );
 }

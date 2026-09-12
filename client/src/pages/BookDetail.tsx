@@ -120,7 +120,7 @@ export default function BookDetail() {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col px-4 py-6 sm:px-6 lg:h-[calc(100vh-4rem)] lg:overflow-hidden">
-      <button onClick={() => navigate(-1)} className="mb-4 shrink-0 text-sm font-semibold text-muted hover:text-accent">
+      <button onClick={() => navigate(-1)} className="mb-4 self-start text-sm font-semibold text-muted hover:text-accent">
         ← Буцах
       </button>
 
@@ -223,7 +223,7 @@ export default function BookDetail() {
               </div>
               {belowMin ? (
                 <p className="text-sm text-red-500">
-                  Хамгийн багадаа {formatPrice(book.currentPrice + book.increment)} байх ёстой (одоогийн тэргүүлэгчээс их байх ёстой)
+                  Хамгийн багадаа {formatPrice(book.currentPrice + book.increment)} байх ёстой (одоогийн өрсөлдөгчөөс их байх ёстой)
                 </p>
               ) : (
                 error && <p className="text-sm text-red-500">{error}</p>
@@ -241,7 +241,7 @@ export default function BookDetail() {
           transition={{ delay: 0.15 }}
           className="flex flex-col overflow-y-auto rounded-2xl border border-border bg-surface p-6 md:col-span-1 lg:min-h-0"
         >
-          <h2 className="mb-3 shrink-0 font-display text-lg font-bold text-fg">Тэргүүлэгчид</h2>
+          <h2 className="mb-3 shrink-0 font-display text-lg font-bold text-fg">Өрсөлдөгчид</h2>
           {leaderboard.length === 0 ? (
             <p className="text-sm text-muted">Одоогоор үнэ хэлээгүй байна — эхнийх нь болоорой!</p>
           ) : (

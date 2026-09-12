@@ -66,7 +66,7 @@ export default function Home() {
                 aria-hidden="true"
                 initial={{ opacity: 0, scale: 0.8, scaleX: -1 }}
                 animate={{ opacity: 1, scale: 1, scaleX: -1 }}
-                className="h-32 w-32 sm:h-40 sm:w-40"
+                className="h-36 w-36 sm:h-48 sm:w-48"
               />
 
               <motion.div

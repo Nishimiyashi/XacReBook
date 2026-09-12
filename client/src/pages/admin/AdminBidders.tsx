@@ -35,7 +35,7 @@ export default function AdminBidders() {
         <div>
           <h1 className="font-display text-2xl font-bold text-fg">{book?.title ?? 'Ном'}</h1>
           <p className="text-sm text-muted">
-            {bidders.length} тэргүүлэгч · Одоогийн үнэ {book ? formatPrice(book.currentPrice) : ''}
+            {bidders.length} өрсөлдөгч · Одоогийн үнэ {book ? formatPrice(book.currentPrice) : ''}
           </p>
         </div>
       </div>
