@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(cuid())
+  name       String
+  phone      String     @unique
+  createdAt  DateTime   @default(now())
+  bids       Bid[]
+  wishlisted Wishlist[]
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+enum BookStatus {
+  upcoming
+  live
+  ended
+}
+
+enum BookOrigin {
+  mongolian
+  foreign
+}
+
+model Book {
+  id            String     @id @default(cuid())
+  title         String
+  author        String
+  summary       String
+  genre         String
+  origin        BookOrigin @default(foreign)
+  coverImageUrl String
+  startingPrice Int
+  increment     Int
+  currentPrice  Int
+  auctionEndsAt DateTime?
+  status        BookStatus @default(live)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  bids          Bid[]
+  wishlistedBy  Wishlist[]
+
+  @@index([genre])
+  @@index([status])
+  @@index([origin])
+}
+
+model Bid {
+  id        String   @id @default(cuid())
+  amount    Int
+  createdAt DateTime @default(now())
+
+  book   Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  bookId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@index([bookId, amount])
+  @@index([bookId, userId])
+}
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  book   Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  bookId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@unique([userId, bookId])
+  @@index([bookId])
+}
