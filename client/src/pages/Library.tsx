@@ -51,7 +51,7 @@ export default function Library() {
   const [priceRange, setPriceRange] = useState('');
   const [sort, setSort] = useState<SortOption>('newest');
   const [loading, setLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -154,13 +154,13 @@ export default function Library() {
           <AnimatePresence initial={false}>
             {showFilters && (
               <motion.aside
-                initial={{ opacity: 0, width: 0, marginRight: 0 }}
-                animate={{ opacity: 1, width: 256, marginRight: 32 }}
-                exit={{ opacity: 0, width: 0, marginRight: 0 }}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.2 }}
-                className="mb-8 overflow-hidden lg:sticky lg:top-20 lg:mb-0 lg:shrink-0"
+                className="mb-8 w-full overflow-hidden lg:sticky lg:top-20 lg:mb-0 lg:mr-8 lg:w-64 lg:shrink-0"
               >
-                <div className="w-64 overflow-y-auto rounded-3xl border border-border bg-gradient-to-br from-surface to-surface-2 p-5 shadow-sm lg:max-h-[calc(100vh-6rem)]">
+                <div className="overflow-y-auto rounded-3xl border border-border bg-gradient-to-br from-surface to-surface-2 p-5 shadow-sm lg:max-h-[calc(100vh-6rem)]">
                   <div className="mb-5 flex flex-col gap-2.5">
                     {ORIGIN_OPTIONS.map((opt) => (
                       <label key={opt.value} className="flex cursor-pointer items-center gap-2.5 text-sm">

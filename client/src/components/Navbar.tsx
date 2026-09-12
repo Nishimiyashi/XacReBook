@@ -30,6 +30,11 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'text-accent' : 'text-fg/80 hover:text-accent'
   }`;
 
+const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
+  `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium transition-colors ${
+    isActive ? 'text-accent' : 'text-fg/80 hover:text-accent'
+  }`;
+
 const ICONS = {
   home: (
     <>
@@ -67,8 +72,25 @@ const NAV_ITEMS = [
   { to: '/info', end: false, label: 'Мэдээлэл', icon: 'info' as const },
 ];
 
-function WishlistLink() {
+function WishlistLink({ variant = 'row' }: { variant?: 'row' | 'col' }) {
   const { books } = useWishlist();
+
+  if (variant === 'col') {
+    return (
+      <NavLink to="/wishlist" className={mobileLinkClass}>
+        <span className="relative">
+          <NavIcon name="heart" />
+          {books.length > 0 && (
+            <span className="absolute -right-2 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-accent-fg">
+              {books.length}
+            </span>
+          )}
+        </span>
+        <span>Хадгалсан</span>
+      </NavLink>
+    );
+  }
+
   return (
     <NavLink to="/wishlist" className={linkClass}>
       <NavIcon name="heart" />
@@ -127,14 +149,14 @@ export default function Navbar() {
           )}
         </div>
       </div>
-      <nav className="flex items-center gap-6 border-t border-border px-4 py-2 sm:hidden">
+      <nav className="flex items-stretch border-t border-border sm:hidden">
         {NAV_ITEMS.map((item) => (
-          <NavLink key={item.to} to={item.to} end={item.end} className={linkClass}>
+          <NavLink key={item.to} to={item.to} end={item.end} className={mobileLinkClass}>
             <NavIcon name={item.icon} />
             <span>{item.label}</span>
           </NavLink>
         ))}
-        {user && <WishlistLink />}
+        {user && <WishlistLink variant="col" />}
       </nav>
     </header>
   );

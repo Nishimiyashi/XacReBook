@@ -15,7 +15,7 @@ export default function WishlistButton({
   const { user, openSignIn } = useAuth();
   const { isWishlisted, toggle } = useWishlist();
   const active = isWishlisted(bookId);
-  const dimension = size === 'sm' ? 'h-7 w-7' : 'h-10 w-10';
+  const dimension = size === 'sm' ? 'h-9 w-9' : 'h-10 w-10';
   const iconSize = size === 'sm' ? 16 : 20;
 
   function handleClick(e: MouseEvent) {

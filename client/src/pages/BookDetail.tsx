@@ -199,14 +199,14 @@ export default function BookDetail() {
             </p>
           ) : (
             <form onSubmit={handleBid} className="space-y-2">
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <input
                   type="number"
                   value={bidAmount}
                   onChange={(e) => setBidAmount(e.target.value === '' ? '' : Number(e.target.value))}
                   min={book.startingPrice}
                   step={book.increment}
-                  className={`w-full rounded-lg border bg-bg px-4 py-2.5 text-fg outline-none focus:ring-2 ${
+                  className={`w-full min-w-0 rounded-lg border bg-bg px-4 py-2.5 text-fg outline-none focus:ring-2 ${
                     belowMin
                       ? 'border-red-400 focus:border-red-400 focus:ring-red-400/30'
                       : 'border-border focus:border-accent focus:ring-accent/30'
@@ -216,19 +216,19 @@ export default function BookDetail() {
                   type="submit"
                   disabled={submitting || belowMin}
                   whileTap={{ scale: 0.96 }}
-                  className="whitespace-nowrap rounded-lg bg-accent px-5 py-2.5 font-semibold text-accent-fg shadow-glow transition hover:brightness-110 disabled:opacity-60"
+                  className="w-full shrink-0 whitespace-nowrap rounded-lg bg-accent px-5 py-2.5 font-semibold text-accent-fg shadow-glow transition hover:brightness-110 disabled:opacity-60 sm:w-auto"
                 >
                   {submitting ? 'Илгээж байна…' : 'Үнэ хэлэх'}
                 </motion.button>
               </div>
               {belowMin ? (
                 <p className="text-sm text-red-500">
-                  Хамгийн багадаа {formatPrice(book.startingPrice)} (эхлэх үнэ) байх ёстой
+                  Хамгийн багадаа {formatPrice(book.currentPrice + book.increment)} байх ёстой (одоогийн тэргүүлэгчээс их байх ёстой)
                 </p>
               ) : (
                 error && <p className="text-sm text-red-500">{error}</p>
               )}
-              {justBid && <p className="text-sm font-semibold text-emerald-500">Таны үнэ амжилттай бүртгэгдлээ! 🎉</p>}
+              {justBid && <p className="text-sm font-semibold text-emerald-500">Үнэ амжилттай хэлэгдлээ! Та тэргүүлж байна 🎉</p>}
               {!user && <p className="text-xs text-muted">Үнэ хэлэхийн өмнө та нэвтрэх шаардлагатай.</p>}
             </form>
           )}

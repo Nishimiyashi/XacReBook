@@ -93,7 +93,7 @@ export default function AdminBookForm() {
     <div className="max-w-2xl">
       <h1 className="mb-6 font-display text-2xl font-bold text-fg">{isEdit ? 'Ном засах' : 'Шинэ ном'}</h1>
       <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-border bg-surface p-6">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Гарчиг">
             <input
               required
@@ -112,7 +112,7 @@ export default function AdminBookForm() {
           </Field>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Төрөл">
             <select
               value={form.genre}
@@ -174,7 +174,7 @@ export default function AdminBookForm() {
           </div>
         </Field>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Эхлэх үнэ (₮)">
             <input
               type="number"
@@ -197,7 +197,7 @@ export default function AdminBookForm() {
           </Field>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Дуусах хугацаа">
             <input
               type="datetime-local"
