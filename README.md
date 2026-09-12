@@ -82,12 +82,13 @@ hundreds of people bidding at once. See `server/src/routes/bids.ts`.
 Bid submission is also rate-limited per IP (8 bids / 10s) to blunt accidental
 double-submits or scripted spamming during the live event.
 
-## Deploying for the live event
+## Deploying
 
-The goal is one thing that is boring and hard to knock over for 48 hours, not
-the cheapest possible setup. Recommended: **Render.com**, one Web Service +
-one managed Postgres instance — provisioned together from the `render.yaml`
-Blueprint in this repo.
+Recommended: **Render.com**, one Web Service + one managed Postgres instance —
+provisioned together from the `render.yaml` Blueprint in this repo. The
+blueprint defaults to Render's **free** plan for both, so you can deploy and
+test right now at no cost — see "Going live" below for why that must change
+before the real event.
 
 1. Push this repo to GitHub:
    ```bash
@@ -109,14 +110,7 @@ Blueprint in this repo.
 5. Once it's live, run the seed script **once** from the Render shell (Dashboard
    → your service → **Shell**) to create the admin user and sample books:
    `npm run seed --prefix server`
-6. **Instance plan**: the blueprint defaults both the web service and database
-   to Render's `starter` plan (paid, always-on — never the free tier, which
-   spins down on idle and would drop every open Socket.IO connection). Bump
-   the web service to `standard` from the Render dashboard for the actual
-   event day if you're expecting the full "hundreds of concurrent users" load,
-   then scale back down afterward. Scale the plan up, not out to multiple
-   instances — Socket.IO rooms are simplest on one instance.
-7. **Cover images**: uploaded covers are stored on local disk
+6. **Cover images**: uploaded covers are stored on local disk
    (`server/uploads`) and served at `/uploads/...`. Render's disk is
    *ephemeral* — it's fine for a 1–2 day event as long as you don't redeploy
    after uploading covers (redeploys reset the filesystem). If you'll be
@@ -124,6 +118,37 @@ Blueprint in this repo.
    admin form accepts a plain URL), or wire up a Render persistent disk /
    object storage (S3, Cloudinary) — not set up here to keep the stack
    simple, since it wasn't required for a 1–2 day run.
+
+### Going live: switch off the free plan
+
+The free plan is fine for building and testing, but it will actively break
+the live event if left on:
+
+- The free **web service** spins down after 15 minutes with no traffic. The
+  next visitor waits ~30–60s for a cold start, and anyone with the page open
+  when it spins down gets their live Socket.IO connection killed — bidding
+  silently stops updating until they reload.
+- The free **Postgres** database is limited to 1GB and Render expires free
+  databases after a set period — not something to be relying on to still be
+  there on event day.
+
+Before the real event, from the Render dashboard:
+
+1. Web service → **Settings** → **Instance Type** → change from `Free` to at
+   least `Starter` (bump to `Standard` if you expect the full "hundreds of
+   concurrent users" load). This alone fixes the spin-down/dropped-connection
+   problem.
+2. Database → same idea, move off the `Free` plan.
+3. Since the free DB was only ever meant for testing, treat this as the point
+   where you also clear out test data: reset or re-seed the database with the
+   real book catalog rather than carrying over test bids/users from earlier.
+   `npm run seed` only creates the admin account and sample books when the
+   `Book` table is empty — delete the test books from `/admin/dashboard`
+   first if you want a truly clean slate, or wipe the DB and re-migrate.
+
+Billing is by the hour on Render, not a flat monthly charge — running the
+paid tier just for the 1–2 event days costs a few dollars, not a subscription
+you're stuck with.
 
 ### Before the doors open
 
