@@ -50,9 +50,9 @@ const ICONS = {
   ),
   info: (
     <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 11v5" />
-      <circle cx="12" cy="8" r="0.6" fill="currentColor" stroke="none" />
+      <path d="M14 3v5a1 1 0 0 0 1 1h5" />
+      <path d="M6 3h8l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+      <path d="M9 13h6M9 17h6" />
     </>
   ),
   heart: <path d="M12 21s-6.7-4.35-9.3-8.2C1 10.1 1.6 6.6 4.4 5.1c2.3-1.2 4.9-.4 6.2 1.5l1.4 2 1.4-2c1.3-1.9 3.9-2.7 6.2-1.5 2.8 1.5 3.4 5 1.7 7.7C18.7 16.65 12 21 12 21z" />,
@@ -60,7 +60,16 @@ const ICONS = {
 
 function NavIcon({ name }: { name: keyof typeof ICONS }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       {ICONS[name]}
     </svg>
   );
@@ -109,15 +118,16 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border glass">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        <NavLink to="/" className="flex items-center gap-2">
-          <img src="/siteIcon.png" alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
-          <span className="font-display text-xl font-bold text-fg">
-            Xac<span className="text-accent">Re</span>Book
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:px-6">
+        <NavLink to="/" className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
+          <img src="/siteIcon.png" alt="" aria-hidden="true" className="h-8 w-8 shrink-0 object-contain" />
+          <span className="min-w-0 truncate font-logo text-sm font-bold tracking-tight sm:text-lg">
+            <span className="text-accent">Афлатон</span>
+            <span className="hidden text-fg sm:inline"> номын аян</span>
           </span>
         </NavLink>
 
-        <nav className="hidden items-center gap-7 sm:flex">
+        <nav className="hidden items-center gap-7 sm:flex sm:justify-self-center">
           {NAV_ITEMS.map((item) => (
             <NavLink key={item.to} to={item.to} end={item.end} className={linkClass}>
               <NavIcon name={item.icon} />
@@ -127,7 +137,7 @@ export default function Navbar() {
           {user && <WishlistLink />}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3 sm:shrink sm:justify-self-end">
           <ThemeToggle />
           {user ? (
             <div className="flex items-center gap-2">

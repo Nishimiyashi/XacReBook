@@ -20,54 +20,84 @@ export default function Home() {
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
-        <section className="text-center">
-          <motion.img
-            src="/mascot.png"
-            alt=""
-            aria-hidden="true"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mx-auto mb-2 h-24 w-24 animate-float-slow sm:h-32 sm:w-32"
-          />
-          <motion.span
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-accent"
-          >
-            Шууд дуудлага худалдаа · Үнэ хэлж эзэмш
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
-            className="font-display text-4xl font-bold leading-tight text-fg sm:text-6xl"
-          >
-            Ном бүр өөрийн гэсэн түүхтэй.
-            <br />
-            <span className="text-accent">Таны түүх үнэ хэлснээр эхэлнэ.</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12 }}
-            className="mx-auto mt-5 max-w-xl text-base text-muted sm:text-lg"
-          >
-            Цуглуулгыг чөлөөтэй үзээрэй — үнэ хэлэхэд бэлэн болмогц нэвтэрнэ үү. Хамгийн өндөр үнэ хэлсэн хүн
-            номыг авна.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.18 }}
-            className="mt-8 flex items-center justify-center gap-4"
-          >
-            <Link
-              to="/library"
-              className="rounded-full bg-accent px-7 py-3 font-semibold text-accent-fg shadow-glow transition hover:brightness-110"
+        <section className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
+          <div className="text-center lg:text-left">
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className="font-display text-4xl font-bold leading-[1.15] text-fg sm:text-4xl lg:text-5xl"
             >
-              Номын сан руу очих
-            </Link>
-          </motion.div>
+              <span className="block">
+                Ном бүр өөрийн
+                <br />
+                гэсэн түүхтэй.
+              </span>
+              <span className="mt-3 block italic text-accent">Харин энэ удаа түүний үнэ цэнийг та тодорхойлно.</span>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12 }}
+              className="mx-auto mt-3 max-w-xl text-base text-muted sm:text-base lg:mx-0"
+            >
+              Онцгой номнуудтай танилцаж, өөрийн хүссэн үнээ санал болгоорой. Хамгийн өндөр үнэ санал болгосон оролцогч тухайн номыг эзэмшинэ.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.18 }}
+              className="mt-8 flex items-center justify-center gap-4 lg:justify-start"
+            >
+              <Link
+                to="/library"
+                className="rounded-full bg-accent px-7 py-3 font-semibold text-accent-fg shadow-glow transition hover:brightness-110"
+              >
+                Номын сан руу очих
+              </Link>
+            </motion.div>
+          </div>
+
+          <div className="relative mx-auto flex h-64 w-64 items-center justify-center sm:h-80 sm:w-80">
+            <div className="relative flex h-full w-full animate-float-slow items-center justify-center">
+              <motion.img
+                src="/mascot.png"
+                alt=""
+                aria-hidden="true"
+                initial={{ opacity: 0, scale: 0.8, scaleX: -1 }}
+                animate={{ opacity: 1, scale: 1, scaleX: -1 }}
+                className="h-32 w-32 sm:h-40 sm:w-40"
+              />
+
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="absolute -top-2 left-1/2 w-max max-w-[10.5rem] -translate-x-1/2 rounded-2xl bg-accent px-4 py-2.5 text-xs font-semibold text-accent-fg shadow-glow sm:max-w-[15rem] sm:text-sm"
+              >
+                Хамгийн өндөр үнэ хэлсэн нь ялна!
+                <span className="absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 bg-accent" />
+              </motion.div>
+
+              <motion.span
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
+                className="absolute right-0 top-16 rounded-full bg-fg px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-bg shadow-lg sm:right-2 sm:top-20"
+              >
+                Шууд дуудлага
+              </motion.span>
+
+              <motion.span
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 }}
+                className="absolute bottom-4 left-0 rounded-full border border-accent/30 bg-accent/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-accent sm:bottom-8 sm:left-2"
+              >
+                Нэг ном нэг боломж
+              </motion.span>
+            </div>
+          </div>
         </section>
 
         <section className="mt-16">

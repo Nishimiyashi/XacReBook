@@ -42,6 +42,7 @@ export default {
       fontFamily: {
         display: ['"Cormorant Garamond"', 'serif'],
         sans: ['"Inter"', 'system-ui', 'sans-serif'],
+        logo: ['"Unbounded"', 'sans-serif'],
       },
       boxShadow: {
         glow: '0 0 24px 0 rgba(255, 122, 26, 0.35)',

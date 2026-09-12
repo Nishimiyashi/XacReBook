@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTheme } from '../theme/ThemeContext';
 
 interface Star {
   x: number;
@@ -14,6 +15,11 @@ interface Star {
 
 export default function Starfield() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { theme } = useTheme();
+  const themeRef = useRef(theme);
+  useEffect(() => {
+    themeRef.current = theme;
+  }, [theme]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -54,6 +60,7 @@ export default function Starfield() {
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
       const t = time / 1000;
+      const isDark = themeRef.current === 'dark';
       for (const s of stars) {
         if (!reduceMotion) {
           s.x = (s.x + s.driftX + width) % width;
@@ -62,7 +69,11 @@ export default function Starfield() {
         const twinkle = reduceMotion ? s.baseAlpha : s.baseAlpha * (0.5 + 0.5 * Math.sin(t * s.twinkleSpeed + s.twinklePhase));
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fillStyle = s.hue === 'orange' ? `rgba(255, 150, 60, ${twinkle})` : `rgba(255, 255, 255, ${twinkle})`;
+        if (isDark) {
+          ctx.fillStyle = s.hue === 'orange' ? `rgba(255, 150, 60, ${twinkle})` : `rgba(255, 255, 255, ${twinkle})`;
+        } else {
+          ctx.fillStyle = s.hue === 'orange' ? `rgba(230, 110, 20, ${twinkle})` : `rgba(44, 71, 126, ${twinkle})`;
+        }
         ctx.fill();
       }
       animationId = requestAnimationFrame(draw);
@@ -84,7 +95,7 @@ export default function Starfield() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full opacity-0 dark:opacity-100 transition-opacity duration-500"
+      className="pointer-events-none fixed inset-0 -z-10 h-full w-full"
     />
   );
 }
