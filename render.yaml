@@ -16,7 +16,12 @@ services:
     # live event. See README "Going live" section.
     plan: free
     region: singapore
-    buildCommand: cd client && npm install && npm run build && cd ../server && npm install && npm run build
+    # --include=dev is required here: this build runs with NODE_ENV=production
+    # set (see envVars below), and npm treats that as an implicit
+    # `--production` flag, skipping devDependencies. But vite, typescript,
+    # @vitejs/plugin-react, prisma, etc. are all devDependencies needed only
+    # to build — without this flag the build fails looking for them.
+    buildCommand: cd client && npm install --include=dev && npm run build && cd ../server && npm install --include=dev && npm run build
     startCommand: cd server && npm run prisma:migrate && npm run start
     healthCheckPath: /api/health
     envVars:
