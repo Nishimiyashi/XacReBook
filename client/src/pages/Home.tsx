@@ -12,7 +12,7 @@ export default function Home() {
 
   useEffect(() => {
     api
-      .get<{ books: Book[] }>('/books?limit=5')
+      .get<{ books: Book[] }>('/books?limit=8')
       .then((res) => setFeatured(res.books))
       .finally(() => setLoading(false));
   }, []);
@@ -21,12 +21,12 @@ export default function Home() {
     <>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
         <section className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
-          <div className="text-center lg:text-left">
+          <div className="order-2 text-center lg:order-none lg:text-left">
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
-              className="font-display text-4xl font-bold leading-[1.15] text-fg sm:text-4xl lg:text-5xl"
+              className="font-display text-2xl font-bold leading-[1.15] text-fg sm:text-4xl lg:text-5xl"
             >
               <span className="block">
                 Ном бүр өөрийн
@@ -39,26 +39,26 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.12 }}
-              className="mx-auto mt-3 max-w-xl text-base text-muted sm:text-base lg:mx-0"
+              className="mx-auto mt-3 max-w-xl text-sm text-muted sm:text-base lg:mx-0"
             >
-              Онцгой номнуудтай танилцаж, өөрийн хүссэн үнээ санал болгоорой. Хамгийн өндөр үнэ санал болгосон оролцогч тухайн номыг эзэмшинэ.
+              Таны дараагийн дуртай ном энд байж магадгүй. Таалагдсан номоо сонгоод, өөрийн санал болгох үнээр дуудлага худалдаанд оролцоорой.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18 }}
-              className="mt-8 flex items-center justify-center gap-4 lg:justify-start"
+              className="mt-6 flex items-center justify-center gap-4 sm:mt-8 lg:justify-start"
             >
               <Link
                 to="/library"
-                className="rounded-full bg-accent px-7 py-3 font-semibold text-accent-fg shadow-glow transition hover:brightness-110"
+                className="rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-accent-fg shadow-glow transition hover:brightness-110 sm:px-7 sm:py-3 sm:text-base"
               >
                 Номын сан руу очих
               </Link>
             </motion.div>
           </div>
 
-          <div className="relative mx-auto flex h-64 w-64 items-center justify-center sm:h-80 sm:w-80">
+          <div className="relative order-1 mx-auto flex h-64 w-64 items-center justify-center lg:order-none sm:h-80 sm:w-80">
             <div className="relative flex h-full w-full animate-float-slow items-center justify-center">
               <motion.img
                 src="/mascot.png"
@@ -66,7 +66,7 @@ export default function Home() {
                 aria-hidden="true"
                 initial={{ opacity: 0, scale: 0.8, scaleX: -1 }}
                 animate={{ opacity: 1, scale: 1, scaleX: -1 }}
-                className="h-36 w-36 sm:h-48 sm:w-48"
+                className="h-32 w-32 sm:h-40 sm:w-40"
               />
 
               <motion.div
@@ -100,29 +100,50 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-16">
-          <div className="mb-6 flex items-end justify-between">
-            <div>
-              <h2 className="font-display text-2xl font-bold text-fg sm:text-3xl">Онцлох номууд</h2>
-              <p className="mt-1 text-sm text-muted">Одоо шууд яваа дуудлага худалдаанаас</p>
-            </div>
-            <Link to="/library" className="whitespace-nowrap text-sm font-semibold text-accent hover:underline">
-              Бүгдийг үзэх →
-            </Link>
+        <section className="mt-4 lg:mt-0">
+          <div className="mb-6 lg:text-right">
+            <h2 className="font-display text-2xl font-bold text-fg sm:text-3xl">Онцлох номууд</h2>
+            <p className="mt-1 text-sm text-muted">Яг одоо эзнээ хүлээж буй номууд</p>
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="aspect-[2/3] animate-pulse rounded-xl bg-surface-2" />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:hidden">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="aspect-[2/3] animate-pulse rounded-xl bg-surface-2" />
+                ))}
+              </div>
+              <div className="hidden gap-4 overflow-hidden lg:flex">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="aspect-[2/3] w-44 shrink-0 animate-pulse rounded-xl bg-surface-2" />
+                ))}
+              </div>
+            </>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {featured.map((book, i) => (
-                <BookCard key={book.id} book={book} index={i} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:hidden">
+                {featured.map((book, i) => (
+                  <BookCard key={book.id} book={book} index={i} />
+                ))}
+              </div>
+              <div className="scrollbar-hide hidden gap-4 overflow-x-auto lg:flex">
+                {featured.map((book, i) => (
+                  <div key={book.id} className="w-44 shrink-0">
+                    <BookCard book={book} index={i} />
+                  </div>
+                ))}
+                <Link
+                  to="/library"
+                  className="flex aspect-[2/3] w-44 shrink-0 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border text-sm font-semibold text-accent transition hover:border-accent hover:bg-surface-2"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="m13 6 6 6-6 6" />
+                  </svg>
+                  Бүгдийг үзэх
+                </Link>
+              </div>
+            </>
           )}
         </section>
       </div>

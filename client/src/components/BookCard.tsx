@@ -47,7 +47,6 @@ export default function BookCard({
         >
           {book.title}
         </h3>
-        {!compact && <p className="text-xs text-muted">{book.genre}</p>}
         {/* Starting price only here — the live bid price is shown on the book's own detail page */}
         <p className={`font-display font-bold text-accent ${compact ? 'text-xs sm:text-sm' : 'text-sm'}`}>
           {formatPrice(book.startingPrice)}

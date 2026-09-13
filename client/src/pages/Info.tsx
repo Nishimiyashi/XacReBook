@@ -1,27 +1,9 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-const STEPS = [
-  {
-    icon: '📖',
-    title: 'Чөлөөтэй үзээрэй',
-    body: 'Нэвтрэлгүйгээр номын сан болон бүх номын дэлгэрэнгүй мэдээллийг чөлөөтэй үзэх боломжтой.',
-  },
-  {
-    icon: '✍️',
-    title: 'Үнэ хэлэхэд нэвтэрнэ',
-    body: 'Үнэ хэлэхийн тулд зөвхөн нэр, утасны дугаараа оруулна — маш хурдан бөгөөд энгийн.',
-  },
-  {
-    icon: '🏆',
-    title: 'Хамгийн өндөр үнэ хэлсэн нь ялна',
-    body: 'Дуудлага худалдаа дуусах үед хамгийн өндөр үнэ хэлсэн хүн номыг эзэмшинэ.',
-  },
-];
-
 export default function Info() {
   return (
-    <div className="mx-auto flex max-w-5xl flex-col justify-center px-4 py-10 sm:px-6 lg:h-[calc(100vh-4rem)] lg:py-0">
+    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-12">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -31,36 +13,67 @@ export default function Info() {
           Мэдээлэл
         </span>
         <h1 className="font-display text-3xl font-bold text-fg sm:text-4xl">
-          XacReBook хэрхэн ажилладаг вэ?
+          Афлатон номын аян гэж юу вэ?
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm text-muted sm:text-base">
-          Ном тус бүрийг дуудлага худалдаагаар зардаг цахим үйлчилгээ. Хэрхэн оролцохыг доор харна уу.
+          Аяны болон зохион байгуулж буй байгууллагын талаар дэлгэрэнгүй мэдээлэл.
         </p>
       </motion.div>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {STEPS.map((step, i) => (
-          <motion.div
-            key={step.title}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 + i * 0.08 }}
-            className="rounded-2xl border border-border bg-surface p-5 text-center"
-          >
-            <span className="mb-2 block text-3xl">{step.icon}</span>
-            <h2 className="font-display text-lg font-bold text-fg">{step.title}</h2>
-            <p className="mt-1 text-sm text-muted">{step.body}</p>
-          </motion.div>
-        ))}
+      <div className="mt-10 space-y-5">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          className="relative overflow-hidden rounded-3xl border border-accent/20 bg-gradient-to-br from-accent/10 via-surface to-surface p-8 sm:p-10"
+        >
+          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-accent/25 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-16 -left-10 h-44 w-44 rounded-full bg-navy-400/10 blur-3xl" />
+          <div className="relative text-center sm:text-left">
+            <span className="text-xs font-bold uppercase tracking-widest text-accent">Тухай</span>
+            <h2 className="mt-2 font-display text-2xl font-bold text-fg sm:text-3xl">Аяны тухай мэдээлэл</h2>
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted sm:mx-0 sm:text-base">
+              Энэ аяны зорилго, хамрах хүрээ болон түүх гэх мэтийн талаарх дэлгэрэнгүй мэдээллийг энд оруулна.
+            </p>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ delay: 0.1 }}
+          className="relative overflow-hidden rounded-3xl bg-navy-950 p-8 sm:p-10"
+        >
+          <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-accent/15 blur-3xl" />
+          <div className="relative grid grid-cols-1 items-center gap-6 text-center sm:grid-cols-[auto_1fr] sm:text-left">
+            <img src="/logo.png" alt="Хөгжлийн Алтан Сан" className="mx-auto h-20 w-auto sm:mx-0 sm:h-24" />
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-accent">Зохион байгуулагч</span>
+              <h2 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">Зохион байгуулагчийн талаар мэдээлэл</h2>
+              <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-navy-100/80 sm:mx-0 sm:text-base">
+                "Хөгжлийн Алтан Сан" Холбоо нь 2003 оноос хойш үйл ажиллагаа явуулж буй, XacBank-ны ажилтнуудын дэмжлэгтэй төрийн бус байгууллага юм. Тэд хүүхэд, залуучуудад ирээдүйд ажиллаж, амьдрахад шаардлагатай санхүүгийн боловсрол, хөгжлийн боломжийг олгохыг эрхэм зорилгоо болгодог. Aflatoun, XacLab зэрэг хөтөлбөрүүд, мөн авьяаслаг ч санхүүгийн бэрхшээлтэй залуучуудад зориулсан тэтгэлгийн хөтөлбөрүүдээр дамжуулан энэ зорилгодоо хүрэхийг зорьдог.
+              </p>
+              <a
+                href="https://xacngo.mn/about-us"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline"
+              >
+                Дэлгэрэнгүй үзэх →
+              </a>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="mt-8 flex flex-col items-center gap-2 text-center"
+        className="mt-10 flex flex-col items-center gap-2 text-center"
       >
-        <p className="text-sm text-muted">Бэлэн үү? Одоо номын сангаас хайж эхлээрэй.</p>
+        <p className="text-sm text-muted">Бэлэн үү?</p>
         <Link
           to="/library"
           className="rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-accent-fg shadow-glow transition hover:brightness-110"

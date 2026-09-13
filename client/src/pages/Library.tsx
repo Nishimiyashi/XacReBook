@@ -309,7 +309,7 @@ export default function Library() {
             className={`flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${
               showFilters
                 ? 'border-accent bg-accent text-accent-fg'
-                : 'border-border text-fg/80 hover:border-accent hover:text-accent'
+                : 'border-border bg-surface text-fg/80 hover:border-accent hover:text-accent'
             }`}
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">

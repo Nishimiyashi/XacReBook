@@ -229,7 +229,7 @@ export default function BookDetail() {
                 error && <p className="text-sm text-red-500">{error}</p>
               )}
               {justBid && <p className="text-sm font-semibold text-emerald-500">Үнэ амжилттай хэлэгдлээ! Та тэргүүлж байна 🎉</p>}
-              {!user && <p className="text-xs text-muted">Үнэ хэлэхийн өмнө та нэвтрэх шаардлагатай.</p>}
+              {!user && <p className="text-xs text-muted">Үнэ санал болгохын тулд нэвтэрнэ үү.</p>}
             </form>
           )}
         </motion.div>

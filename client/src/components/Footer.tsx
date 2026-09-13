@@ -1,5 +1,5 @@
-const ORGANIZER_PHONE = '+976 0000 0000'; // TODO: replace with real organizer phone number
-const TECH_PHONE = '+976 1111 1111'; // TODO: replace with real tech/support phone number
+const ORGANIZER_PHONE = '+976 7700 7705'; // TODO: replace with real organizer phone number
+const TECH_PHONE = '+976 8588 8889'; // TODO: replace with real tech/support phone number
 
 export default function Footer() {
   return (
@@ -25,7 +25,7 @@ export default function Footer() {
 
           <div className="flex flex-col items-center gap-2 sm:items-end">
             <p className="text-xs uppercase tracking-widest text-navy-100/60">Зохион байгуулагч</p>
-            <img src="/logo.png" alt="Хөгжлийн Алтан Сан" className="h-8 w-auto sm:h-9" />
+            <img src="/logo.png" alt="Хөгжлийн Алтан Сан" className="h-11 w-auto sm:h-12" />
           </div>
         </div>
 
