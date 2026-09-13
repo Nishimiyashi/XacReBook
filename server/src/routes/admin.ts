@@ -48,20 +48,11 @@ adminRouter.get('/books', requireAdmin, async (_req, res) => {
   res.json({ books });
 });
 
-const GENRES = [
-  'Хувь хүний хөгжил',
-  'Уран зохиол',
-  'Бизнес, эдийн засаг',
-  'Түүх, соёл',
-  'Шинжлэх ухаан',
-  'Бусад',
-] as const;
-
 const bookSchema = z.object({
   title: z.string().trim().min(1, 'Гарчиг оруулна уу'),
   author: z.string().trim().min(1, 'Зохиогчийг оруулна уу'),
   summary: z.string().trim().min(1, 'Тойм оруулна уу'),
-  genre: z.enum(GENRES, { errorMap: () => ({ message: 'Төрлийг сонгоно уу' }) }),
+  genre: z.string().trim().min(1, 'Төрлийг оруулна уу'),
   origin: z.enum(['mongolian', 'foreign'], { errorMap: () => ({ message: 'Гарал үүслийг сонгоно уу' }) }),
   coverImageUrl: z.string().trim().min(1, 'Нүүр зураг оруулна уу'),
   startingPrice: z.number().int().positive('Эхлэх үнэ эерэг тоо байх ёстой'),

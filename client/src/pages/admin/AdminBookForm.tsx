@@ -4,6 +4,8 @@ import { api, ApiError, uploadCover } from '../../lib/api';
 import type { Book } from '../../types';
 import { GENRES } from '../../lib/genres';
 
+const NEW_GENRE_VALUE = '__new__';
+
 const emptyForm = {
   title: '',
   author: '',
@@ -11,8 +13,8 @@ const emptyForm = {
   genre: GENRES[0] as string,
   origin: 'foreign' as Book['origin'],
   coverImageUrl: '',
-  startingPrice: 10000,
-  increment: 2000,
+  startingPrice: '10000',
+  increment: '2000',
   status: 'live' as Book['status'],
   auctionEndsAt: '',
 };
@@ -40,8 +42,8 @@ export default function AdminBookForm() {
           genre: book.genre,
           origin: book.origin,
           coverImageUrl: book.coverImageUrl,
-          startingPrice: book.startingPrice,
-          increment: book.increment,
+          startingPrice: String(book.startingPrice),
+          increment: String(book.increment),
           status: book.status,
           auctionEndsAt: book.auctionEndsAt ? book.auctionEndsAt.slice(0, 16) : '',
         });
@@ -71,6 +73,8 @@ export default function AdminBookForm() {
     setSubmitting(true);
     const payload = {
       ...form,
+      startingPrice: Number(form.startingPrice),
+      increment: Number(form.increment),
       auctionEndsAt: form.auctionEndsAt ? new Date(form.auctionEndsAt).toISOString() : null,
     };
     try {
@@ -116,8 +120,10 @@ export default function AdminBookForm() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Төрөл">
             <select
-              value={form.genre}
-              onChange={(e) => setForm((f) => ({ ...f, genre: e.target.value }))}
+              value={(GENRES as readonly string[]).includes(form.genre) ? form.genre : NEW_GENRE_VALUE}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, genre: e.target.value === NEW_GENRE_VALUE ? '' : e.target.value }))
+              }
               className={inputClass}
             >
               {GENRES.map((g) => (
@@ -125,7 +131,18 @@ export default function AdminBookForm() {
                   {g}
                 </option>
               ))}
+              <option value={NEW_GENRE_VALUE}>+ Шинэ төрөл нэмэх</option>
             </select>
+            {!(GENRES as readonly string[]).includes(form.genre) && (
+              <input
+                required
+                autoFocus
+                placeholder="Шинэ төрлийн нэр…"
+                value={form.genre}
+                onChange={(e) => setForm((f) => ({ ...f, genre: e.target.value }))}
+                className={`${inputClass} mt-2`}
+              />
+            )}
           </Field>
           <Field label="Гарал үүсэл">
             <div className="flex gap-2">
@@ -183,7 +200,7 @@ export default function AdminBookForm() {
               required
               min={1}
               value={form.startingPrice}
-              onChange={(e) => setForm((f) => ({ ...f, startingPrice: Number(e.target.value) }))}
+              onChange={(e) => setForm((f) => ({ ...f, startingPrice: e.target.value }))}
               className={inputClass}
             />
           </Field>
@@ -193,7 +210,7 @@ export default function AdminBookForm() {
               required
               min={1}
               value={form.increment}
-              onChange={(e) => setForm((f) => ({ ...f, increment: Number(e.target.value) }))}
+              onChange={(e) => setForm((f) => ({ ...f, increment: e.target.value }))}
               className={inputClass}
             />
           </Field>
