@@ -73,6 +73,10 @@ body {
   -webkit-backdrop-filter: blur(14px);
 }
 
+.dark .glass {
+  background: rgb(10 17 40 / 0.72);
+}
+
 .scrollbar-hide {
   scrollbar-width: none;
   -ms-overflow-style: none;
