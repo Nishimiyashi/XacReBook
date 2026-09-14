@@ -1,4 +1,4 @@
-const ORGANIZER_PHONE = '+976 7700 7705'; // TODO: replace with real organizer phone number
+const ORGANIZER_PHONE = '+976 8846 8766'; // TODO: replace with real organizer phone number
 const TECH_PHONE = '+976 8588 8889'; // TODO: replace with real tech/support phone number
 
 export default function Footer() {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { api } from '../lib/api';
@@ -6,9 +6,36 @@ import type { Book } from '../types';
 import BookCard from '../components/BookCard';
 import Footer from '../components/Footer';
 
+// Chromium hijacks a plain vertical wheel gesture into horizontal scroll on
+// any element with overflow-x but no overflow-y — so scrolling the page
+// while the cursor happens to be over this row eats the first tick or two
+// instead of moving the page. Force vertical wheel input to always scroll
+// the page; only a genuinely horizontal gesture (trackpad swipe, shift+wheel)
+// scrolls the row itself. React's onWheel is passive by default, so
+// preventDefault() there silently no-ops — this needs a real, non-passive
+// DOM listener, attached via a callback ref since the row mounts/unmounts
+// as `loading` flips.
+function onCarouselWheel(e: globalThis.WheelEvent) {
+  if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    e.preventDefault();
+    window.scrollBy({ top: e.deltaY });
+  }
+}
+
+function useCarouselWheelFix() {
+  const cleanup = useRef<() => void>();
+  return useCallback((el: HTMLDivElement | null) => {
+    cleanup.current?.();
+    if (!el) return;
+    el.addEventListener('wheel', onCarouselWheel, { passive: false });
+    cleanup.current = () => el.removeEventListener('wheel', onCarouselWheel);
+  }, []);
+}
+
 export default function Home() {
   const [featured, setFeatured] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const carouselRef = useCarouselWheelFix();
 
   useEffect(() => {
     api
@@ -113,7 +140,7 @@ export default function Home() {
                   <div key={i} className="aspect-[2/3] animate-pulse rounded-xl bg-surface-2" />
                 ))}
               </div>
-              <div className="hidden gap-4 overflow-hidden lg:flex">
+              <div ref={carouselRef} className="hidden gap-4 overflow-hidden lg:flex">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="aspect-[2/3] w-44 shrink-0 animate-pulse rounded-xl bg-surface-2" />
                 ))}
@@ -126,22 +153,26 @@ export default function Home() {
                   <BookCard key={book.id} book={book} index={i} />
                 ))}
               </div>
-              <div className="scrollbar-hide hidden gap-4 overflow-x-auto lg:flex">
-                {featured.map((book, i) => (
-                  <div key={book.id} className="w-44 shrink-0">
-                    <BookCard book={book} index={i} />
-                  </div>
-                ))}
-                <Link
-                  to="/library"
-                  className="flex aspect-[2/3] w-44 shrink-0 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border text-sm font-semibold text-accent transition hover:border-accent hover:bg-surface-2"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14" />
-                    <path d="m13 6 6 6-6 6" />
-                  </svg>
-                  Бүгдийг үзэх
-                </Link>
+              <div className="relative hidden lg:block">
+                <div ref={carouselRef} className="scrollbar-hide flex gap-4 overflow-x-auto">
+                  {featured.map((book, i) => (
+                    <div key={book.id} className="w-44 shrink-0">
+                      <BookCard book={book} index={i} />
+                    </div>
+                  ))}
+                  <Link
+                    to="/library"
+                    className="flex aspect-[2/3] w-44 shrink-0 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border text-sm font-semibold text-accent transition hover:border-accent hover:bg-surface-2"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14" />
+                      <path d="m13 6 6 6-6 6" />
+                    </svg>
+                    Бүгдийг үзэх
+                  </Link>
+                </div>
+                {/* fade hints that the row scrolls — otherwise the last card just looks clipped */}
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-bg to-transparent" />
               </div>
             </>
           )}

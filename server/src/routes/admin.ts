@@ -54,8 +54,8 @@ const bookSchema = z.object({
   origin: z.enum(['mongolian', 'foreign'], { errorMap: () => ({ message: 'Гарал үүслийг сонгоно уу' }) }),
   coverImageUrl: z.string().trim().min(1, 'Нүүр зураг оруулна уу'),
   startingPrice: z.number().int().positive('Эхлэх үнэ эерэг тоо байх ёстой'),
-  marketPrice: z.number().int().positive('Зах зээлийн үнэ эерэг тоо байх ёстой').nullable().optional(),
-  condition: z.string().trim().min(1).nullable().optional(),
+  marketPrice: z.number().int().positive('Зах зээлийн үнэ эерэг тоо байх ёстой'),
+  condition: z.string().trim().min(1, 'Эдэлгээг оруулна уу'),
   auctionEndsAt: z.string().datetime('Дуусах хугацаа буруу байна').nullable().optional(),
   status: z.enum(['upcoming', 'live', 'ended']).default('live'),
 });

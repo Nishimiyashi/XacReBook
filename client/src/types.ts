@@ -10,8 +10,8 @@ export interface Book {
   origin: BookOrigin;
   coverImageUrl: string;
   startingPrice: number;
-  marketPrice: number | null;
-  condition: string | null;
+  marketPrice: number;
+  condition: string;
   currentPrice: number;
   auctionEndsAt: string | null;
   status: BookStatus;

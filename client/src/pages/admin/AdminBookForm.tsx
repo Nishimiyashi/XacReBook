@@ -76,8 +76,8 @@ export default function AdminBookForm() {
     const payload = {
       ...form,
       startingPrice: Number(form.startingPrice),
-      marketPrice: form.marketPrice.trim() ? Number(form.marketPrice) : null,
-      condition: form.condition.trim() ? form.condition.trim() : null,
+      marketPrice: Number(form.marketPrice),
+      condition: form.condition.trim(),
       auctionEndsAt: form.auctionEndsAt ? new Date(form.auctionEndsAt).toISOString() : null,
     };
     try {
@@ -210,8 +210,8 @@ export default function AdminBookForm() {
           <Field label="Зах зээлийн үнэ (₮)">
             <input
               type="number"
+              required
               min={1}
-              placeholder="Заавал биш"
               value={form.marketPrice}
               onChange={(e) => setForm((f) => ({ ...f, marketPrice: e.target.value }))}
               className={inputClass}
@@ -221,6 +221,7 @@ export default function AdminBookForm() {
 
         <Field label="Эдэлгээ">
           <input
+            required
             placeholder="Жишээ нь: 9/10"
             value={form.condition}
             onChange={(e) => setForm((f) => ({ ...f, condition: e.target.value }))}
