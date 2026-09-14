@@ -111,6 +111,7 @@ bidsRouter.post('/:id/bids', requireAuth, bidLimiter, async (req, res) => {
 
     const leaderboard = await buildLeaderboard(bookId);
     const bidCount = await prisma.bid.count({ where: { bookId } });
+    const mine = await prisma.bid.aggregate({ where: { bookId, userId }, _max: { amount: true } });
 
     const io = req.app.get('io') as SocketServer;
     io.to(`book:${bookId}`).emit('book:update', {
@@ -121,9 +122,79 @@ bidsRouter.post('/:id/bids', requireAuth, bidLimiter, async (req, res) => {
     });
     io.to('library').emit('library:price', { bookId, currentPrice: result.book.currentPrice });
 
-    res.json({ book: result.book, leaderboard, bidCount });
+    res.json({ book: result.book, leaderboard, bidCount, myBid: mine._max.amount ?? null });
   } catch (err) {
     console.error('Bid failed', err);
     res.status(500).json({ error: 'Үнэ хэлж чадсангүй, дахин оролдоно уу' });
+  }
+});
+
+// Withdraws every bid this user placed on this book — this is a silent
+// auction with no "must outbid" ratchet, so cancelling just means "I no
+// longer have a standing offer here." currentPrice is recomputed from
+// whatever bids (if any) remain, since it must never reflect a withdrawn
+// amount.
+bidsRouter.delete('/:id/bids', requireAuth, async (req, res) => {
+  const bookId = req.params.id;
+  const userId = req.userId!;
+
+  type CancelResult =
+    | { ok: false; error: 'not_found' | 'ended' | 'no_bid' }
+    | { ok: true; book: Book };
+
+  try {
+    const result: CancelResult = await prisma.$transaction(async (tx) => {
+      const rows = await tx.$queryRaw<BookRow[]>`
+        SELECT id, "startingPrice", "currentPrice", status, "auctionEndsAt"
+        FROM "Book" WHERE id = ${bookId} FOR UPDATE
+      `;
+      const book = rows[0];
+      if (!book) {
+        return { ok: false, error: 'not_found' };
+      }
+      if (book.status === 'ended' || (book.auctionEndsAt && book.auctionEndsAt.getTime() < Date.now())) {
+        return { ok: false, error: 'ended' };
+      }
+
+      const existing = await tx.bid.findFirst({ where: { bookId, userId } });
+      if (!existing) {
+        return { ok: false, error: 'no_bid' };
+      }
+
+      await tx.bid.deleteMany({ where: { bookId, userId } });
+
+      const remaining = await tx.bid.aggregate({ where: { bookId }, _max: { amount: true } });
+      const updated = await tx.book.update({
+        where: { id: bookId },
+        data: { currentPrice: Math.max(book.startingPrice, remaining._max.amount ?? 0) },
+      });
+      return { ok: true, book: updated };
+    });
+
+    if (!result.ok) {
+      const messages: Record<string, string> = {
+        not_found: 'Ном олдсонгүй',
+        ended: 'Дууссан дуудлага худалдааны санал хэлэлцэхийг цуцлах боломжгүй',
+        no_bid: 'Танд идэвхтэй санал алга байна',
+      };
+      return res.status(400).json({ error: messages[result.error] });
+    }
+
+    const leaderboard = await buildLeaderboard(bookId);
+    const bidCount = await prisma.bid.count({ where: { bookId } });
+
+    const io = req.app.get('io') as SocketServer;
+    io.to(`book:${bookId}`).emit('book:update', {
+      bookId,
+      currentPrice: result.book.currentPrice,
+      leaderboard,
+      bidCount,
+    });
+    io.to('library').emit('library:price', { bookId, currentPrice: result.book.currentPrice });
+
+    res.json({ book: result.book, leaderboard, bidCount, myBid: null });
+  } catch (err) {
+    console.error('Cancel bid failed', err);
+    res.status(500).json({ error: 'Цуцалж чадсангүй, дахин оролдоно уу' });
   }
 });

@@ -72,5 +72,15 @@ booksRouter.get('/:id', async (req, res) => {
   }
   const leaderboard = await getLeaderboard(book.id);
   const bidCount = await prisma.bid.count({ where: { bookId: book.id } });
-  res.json({ book, leaderboard, bidCount });
+
+  let myBid: number | null = null;
+  if (req.userId) {
+    const mine = await prisma.bid.aggregate({
+      where: { bookId: book.id, userId: req.userId },
+      _max: { amount: true },
+    });
+    myBid = mine._max.amount ?? null;
+  }
+
+  res.json({ book, leaderboard, bidCount, myBid });
 });

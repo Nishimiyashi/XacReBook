@@ -13,6 +13,7 @@ interface BookResponse {
   book: Book;
   leaderboard: LeaderboardEntry[];
   bidCount: number;
+  myBid: number | null;
 }
 
 export default function BookDetail() {
@@ -29,6 +30,8 @@ export default function BookDetail() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [justBid, setJustBid] = useState(false);
+  const [myBid, setMyBid] = useState<number | null>(null);
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -40,6 +43,7 @@ export default function BookDetail() {
         setLeaderboard(res.leaderboard);
         setBidCount(res.bidCount);
         setBidAmount(res.book.startingPrice);
+        setMyBid(res.myBid);
       })
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
@@ -87,12 +91,31 @@ export default function BookDetail() {
       setBook(res.book);
       setLeaderboard(res.leaderboard);
       setBidCount(res.bidCount);
+      setMyBid(res.myBid);
       setJustBid(true);
       setTimeout(() => setJustBid(false), 1200);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Үнэ хэлж чадсангүй');
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleCancel() {
+    if (!book || !id) return;
+    setCancelling(true);
+    setError(null);
+    try {
+      const res = await api.delete<BookResponse>(`/books/${id}/bids`);
+      setBook(res.book);
+      setLeaderboard(res.leaderboard);
+      setBidCount(res.bidCount);
+      setMyBid(res.myBid);
+      setBidAmount(res.book.startingPrice);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Цуцалж чадсангүй');
+    } finally {
+      setCancelling(false);
     }
   }
 
@@ -185,37 +208,54 @@ export default function BookDetail() {
                 Энэ дуудлага худалдаа дууссан байна.
               </p>
             ) : (
-              <form onSubmit={handleBid} className="max-w-sm space-y-2">
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    value={bidAmount}
-                    onChange={(e) => setBidAmount(e.target.value === '' ? '' : Number(e.target.value))}
-                    min={book.startingPrice}
-                    step={1}
-                    className={`w-full min-w-0 rounded-lg border bg-bg px-4 py-2.5 text-fg outline-none focus:ring-2 ${
-                      belowMin
-                        ? 'border-red-400 focus:border-red-400 focus:ring-red-400/30'
-                        : 'border-border focus:border-accent focus:ring-accent/30'
-                    }`}
-                  />
-                  <motion.button
-                    type="submit"
-                    disabled={submitting || belowMin}
-                    whileTap={{ scale: 0.96 }}
-                    className="shrink-0 whitespace-nowrap rounded-lg bg-accent px-5 py-2.5 font-semibold text-accent-fg shadow-glow transition hover:brightness-110 disabled:opacity-60"
-                  >
-                    {submitting ? 'Илгээж байна…' : 'Үнэ хэлэх'}
-                  </motion.button>
-                </div>
-                {belowMin ? (
-                  <p className="text-sm text-red-500">Хамгийн багадаа {formatPrice(book.startingPrice)} байх ёстой</p>
-                ) : (
-                  error && <p className="text-sm text-red-500">{error}</p>
+              <div className="flex max-w-2xl flex-col gap-3 sm:flex-row sm:items-start">
+                <form onSubmit={handleBid} className="flex-1 space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={bidAmount}
+                      onChange={(e) => setBidAmount(e.target.value === '' ? '' : Number(e.target.value))}
+                      min={book.startingPrice}
+                      step={1}
+                      className={`h-11 w-full min-w-0 rounded-lg border bg-bg px-4 text-fg outline-none focus:ring-2 ${
+                        belowMin
+                          ? 'border-red-400 focus:border-red-400 focus:ring-red-400/30'
+                          : 'border-border focus:border-accent focus:ring-accent/30'
+                      }`}
+                    />
+                    <motion.button
+                      type="submit"
+                      disabled={submitting || belowMin}
+                      whileTap={{ scale: 0.96 }}
+                      className="flex h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-accent px-5 font-semibold text-accent-fg shadow-glow transition hover:brightness-110 disabled:opacity-60"
+                    >
+                      {submitting ? 'Илгээж байна…' : 'Үнэ хэлэх'}
+                    </motion.button>
+                  </div>
+                  {belowMin ? (
+                    <p className="text-sm text-red-500">Хамгийн багадаа {formatPrice(book.startingPrice)} байх ёстой</p>
+                  ) : (
+                    error && <p className="text-sm text-red-500">{error}</p>
+                  )}
+                  {justBid && <p className="text-sm font-semibold text-emerald-500">Үнэ амжилттай хэлэгдлээ! Та тэргүүлж байна 🎉</p>}
+                  {!user && <p className="text-xs text-muted">Үнэ санал болгохын тулд нэвтэрнэ үү.</p>}
+                </form>
+                {myBid !== null && (
+                  <div className="flex h-11 flex-1 items-center justify-between gap-3 whitespace-nowrap rounded-lg bg-surface-2 px-4 text-sm">
+                    <span className="text-fg">
+                      Таны санал: <span className="font-semibold text-accent">{formatPrice(myBid)}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleCancel}
+                      disabled={cancelling}
+                      className="shrink-0 text-xs font-semibold text-red-500 hover:underline disabled:opacity-60"
+                    >
+                      {cancelling ? 'Цуцалж байна…' : 'Цуцлах'}
+                    </button>
+                  </div>
                 )}
-                {justBid && <p className="text-sm font-semibold text-emerald-500">Үнэ амжилттай хэлэгдлээ! Та тэргүүлж байна 🎉</p>}
-                {!user && <p className="text-xs text-muted">Үнэ санал болгохын тулд нэвтэрнэ үү.</p>}
-              </form>
+              </div>
             )}
           </div>
         </motion.div>
