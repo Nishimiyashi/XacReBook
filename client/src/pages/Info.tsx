@@ -203,7 +203,7 @@ export default function Info() {
         transition={{ delay: 0.4 }}
         className="mt-10 flex flex-col items-center gap-2 text-center"
       >
-        <p className="text-sm text-muted">Бэлэн үү?</p>
+        <p className="text-sm text-muted"></p>
         <Link
           to="/library"
           className="rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-accent-fg shadow-glow transition hover:brightness-110"
