@@ -129,7 +129,7 @@ export default function BookDetail() {
         <motion.div
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
-          className="relative flex flex-col justify-center overflow-y-auto rounded-2xl border border-border bg-surface p-6 md:col-span-2 md:h-[22rem] lg:h-full"
+          className="relative flex flex-col justify-center overflow-y-auto rounded-2xl border border-border bg-surface p-6 md:col-span-2 md:h-[22rem] md:justify-start lg:h-full"
         >
           <WishlistButton bookId={book.id} className="absolute right-4 top-4" />
           <div className="mb-2 flex flex-wrap gap-2 pr-10">

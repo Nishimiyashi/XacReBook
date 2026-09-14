@@ -28,7 +28,7 @@ export default function BookCard({
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.35, delay: Math.min(index * 0.04, 0.3) }}
       whileHover={{ y: -6 }}
-      className="group flex cursor-pointer flex-col overflow-hidden rounded-lg border border-border bg-surface text-left shadow-sm outline-none transition-shadow hover:shadow-lg hover:shadow-accent/10 focus-visible:ring-2 focus-visible:ring-accent"
+      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-border bg-surface text-left shadow-sm outline-none transition-shadow hover:shadow-lg hover:shadow-accent/10 focus-visible:ring-2 focus-visible:ring-accent"
     >
       <motion.div layoutId={`book-cover-${book.id}`} className="relative aspect-[2/3] w-full overflow-hidden bg-surface-2">
         <img
