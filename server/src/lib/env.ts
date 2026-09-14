@@ -18,4 +18,10 @@ export const env = {
   // client is served from this same service in production anyway.
   clientOrigin: process.env.CLIENT_ORIGIN ?? process.env.RENDER_EXTERNAL_URL ?? 'http://localhost:5173',
   isProduction: process.env.NODE_ENV === 'production',
+  // Optional: when set, uploaded cover images go to Cloudinary instead of
+  // local disk. Local disk doesn't survive a redeploy or a free-tier Render
+  // spin-down (ephemeral filesystem), so production must set these.
+  cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
+  cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
 };

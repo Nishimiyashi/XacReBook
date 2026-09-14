@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { api, ApiError } from '../lib/api';
@@ -67,11 +67,6 @@ export default function BookDetail() {
     };
   }, [id]);
 
-  const quickBids = useMemo(() => {
-    if (!book) return [];
-    return [1, 2, 3, 4, 5].map((n) => book.startingPrice + book.increment * n);
-  }, [book]);
-
   const belowMin = book !== null && bidAmount !== '' && bidAmount < book.startingPrice;
 
   async function handleBid(e: FormEvent) {
@@ -119,7 +114,7 @@ export default function BookDetail() {
   const ended = book.status === 'ended' || (book.auctionEndsAt ? new Date(book.auctionEndsAt).getTime() < Date.now() : false);
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col px-4 py-6 sm:px-6 lg:h-[calc(100vh-4rem)] lg:overflow-hidden">
+    <div className="mx-auto flex max-w-6xl flex-col px-4 py-6 sm:px-6 lg:h-[clamp(38rem,calc(100vh-4rem),50rem)] lg:overflow-hidden">
       <button onClick={() => navigate(-1)} className="mb-4 self-start text-sm font-semibold text-muted hover:text-accent">
         ← Буцах
       </button>
@@ -141,6 +136,11 @@ export default function BookDetail() {
             <span className="w-fit rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
               {book.genre}
             </span>
+            {book.condition && (
+              <span className="w-fit rounded-full bg-surface-2 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-fg/80">
+                Эдэлгээ: {book.condition}
+              </span>
+            )}
           </div>
           <h1 className="font-display text-2xl font-bold text-fg lg:text-3xl">{book.title}</h1>
           <p className="mt-1 text-sm text-muted">Зохиогч: {book.author}</p>
@@ -158,11 +158,17 @@ export default function BookDetail() {
           transition={{ delay: 0.1 }}
           className="flex flex-col justify-center rounded-2xl border border-border bg-surface p-6 md:col-span-2 lg:min-h-0"
         >
-          <div className="mb-3 flex items-baseline justify-between">
+          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
             <div>
               <p className="text-xs text-muted">Эхлэх үнэ</p>
               <p className="text-sm font-semibold text-fg">{formatPrice(book.startingPrice)}</p>
             </div>
+            {book.marketPrice != null && (
+              <div>
+                <p className="text-xs text-muted">Зах зээлийн үнэ</p>
+                <p className="text-sm font-semibold text-fg">{formatPrice(book.marketPrice)}</p>
+              </div>
+            )}
             <div className="text-right">
               <p className="text-xs text-muted">Одоогийн үнэ</p>
               <motion.p
@@ -174,23 +180,6 @@ export default function BookDetail() {
                 {formatPrice(book.currentPrice)}
               </motion.p>
             </div>
-          </div>
-
-          <div className="mb-3 flex flex-wrap gap-2">
-            {quickBids.map((amount) => (
-              <button
-                key={amount}
-                type="button"
-                onClick={() => setBidAmount(amount)}
-                className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${
-                  bidAmount === amount
-                    ? 'border-accent bg-accent text-accent-fg'
-                    : 'border-border text-fg/80 hover:border-accent hover:text-accent'
-                }`}
-              >
-                {formatPrice(amount)}
-              </button>
-            ))}
           </div>
 
           {ended ? (
@@ -205,7 +194,7 @@ export default function BookDetail() {
                   value={bidAmount}
                   onChange={(e) => setBidAmount(e.target.value === '' ? '' : Number(e.target.value))}
                   min={book.startingPrice}
-                  step={book.increment}
+                  step={1}
                   className={`w-full min-w-0 rounded-lg border bg-bg px-4 py-2.5 text-fg outline-none focus:ring-2 ${
                     belowMin
                       ? 'border-red-400 focus:border-red-400 focus:ring-red-400/30'
@@ -222,9 +211,7 @@ export default function BookDetail() {
                 </motion.button>
               </div>
               {belowMin ? (
-                <p className="text-sm text-red-500">
-                  Хамгийн багадаа {formatPrice(book.currentPrice + book.increment)} байх ёстой (одоогийн өрсөлдөгчөөс их байх ёстой)
-                </p>
+                <p className="text-sm text-red-500">Хамгийн багадаа {formatPrice(book.startingPrice)} байх ёстой</p>
               ) : (
                 error && <p className="text-sm text-red-500">{error}</p>
               )}

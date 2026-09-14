@@ -29,7 +29,6 @@ type BookRow = {
   id: string;
   startingPrice: number;
   currentPrice: number;
-  increment: number;
   status: BookStatus;
   auctionEndsAt: Date | null;
 };
@@ -71,7 +70,7 @@ bidsRouter.post('/:id/bids', requireAuth, bidLimiter, async (req, res) => {
   try {
     const result: BidResult = await prisma.$transaction(async (tx) => {
       const rows = await tx.$queryRaw<BookRow[]>`
-        SELECT id, "startingPrice", "currentPrice", increment, status, "auctionEndsAt"
+        SELECT id, "startingPrice", "currentPrice", status, "auctionEndsAt"
         FROM "Book" WHERE id = ${bookId} FOR UPDATE
       `;
       const book = rows[0];

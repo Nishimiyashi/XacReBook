@@ -14,7 +14,8 @@ const emptyForm = {
   origin: 'foreign' as Book['origin'],
   coverImageUrl: '',
   startingPrice: '10000',
-  increment: '2000',
+  marketPrice: '',
+  condition: '',
   status: 'live' as Book['status'],
   auctionEndsAt: '',
 };
@@ -43,7 +44,8 @@ export default function AdminBookForm() {
           origin: book.origin,
           coverImageUrl: book.coverImageUrl,
           startingPrice: String(book.startingPrice),
-          increment: String(book.increment),
+          marketPrice: book.marketPrice != null ? String(book.marketPrice) : '',
+          condition: book.condition ?? '',
           status: book.status,
           auctionEndsAt: book.auctionEndsAt ? book.auctionEndsAt.slice(0, 16) : '',
         });
@@ -74,7 +76,8 @@ export default function AdminBookForm() {
     const payload = {
       ...form,
       startingPrice: Number(form.startingPrice),
-      increment: Number(form.increment),
+      marketPrice: form.marketPrice.trim() ? Number(form.marketPrice) : null,
+      condition: form.condition.trim() ? form.condition.trim() : null,
       auctionEndsAt: form.auctionEndsAt ? new Date(form.auctionEndsAt).toISOString() : null,
     };
     try {
@@ -204,17 +207,26 @@ export default function AdminBookForm() {
               className={inputClass}
             />
           </Field>
-          <Field label="Нэмэгдэх алхам (₮)">
+          <Field label="Зах зээлийн үнэ (₮)">
             <input
               type="number"
-              required
               min={1}
-              value={form.increment}
-              onChange={(e) => setForm((f) => ({ ...f, increment: e.target.value }))}
+              placeholder="Заавал биш"
+              value={form.marketPrice}
+              onChange={(e) => setForm((f) => ({ ...f, marketPrice: e.target.value }))}
               className={inputClass}
             />
           </Field>
         </div>
+
+        <Field label="Эдэлгээ">
+          <input
+            placeholder="Жишээ нь: 9/10"
+            value={form.condition}
+            onChange={(e) => setForm((f) => ({ ...f, condition: e.target.value }))}
+            className={inputClass}
+          />
+        </Field>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Дуусах хугацаа">

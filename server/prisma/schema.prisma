@@ -43,7 +43,8 @@ model Book {
   origin        BookOrigin @default(foreign)
   coverImageUrl String
   startingPrice Int
-  increment     Int
+  marketPrice   Int?
+  condition     String?
   currentPrice  Int
   auctionEndsAt DateTime?
   status        BookStatus @default(live)

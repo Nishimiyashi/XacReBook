@@ -25,7 +25,8 @@ async function main() {
         genre: 'Уран зохиол',
         coverImageUrl: 'https://placehold.co/400x600/1a3a3a/ffffff?text=The%20Midnight%20Library',
         startingPrice: 15000,
-        increment: 3000,
+        marketPrice: 28000,
+        condition: '9/10',
         origin: 'foreign' as const,
       },
       {
@@ -35,7 +36,8 @@ async function main() {
         genre: 'Шинжлэх ухаан',
         coverImageUrl: 'https://placehold.co/400x600/5c1a1a/ffffff?text=Sapiens',
         startingPrice: 20000,
-        increment: 4000,
+        marketPrice: 35000,
+        condition: '8/10',
         origin: 'foreign' as const,
       },
       {
@@ -45,7 +47,8 @@ async function main() {
         genre: 'Уран зохиол',
         coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780441172719-L.jpg',
         startingPrice: 18000,
-        increment: 3500,
+        marketPrice: 32000,
+        condition: '10/10',
         origin: 'foreign' as const,
       },
       {
@@ -55,7 +58,8 @@ async function main() {
         genre: 'Бусад',
         coverImageUrl: 'https://placehold.co/400x600/3a2a52/ffffff?text=Educated',
         startingPrice: 16000,
-        increment: 3000,
+        marketPrice: 27000,
+        condition: '7/10',
         origin: 'foreign' as const,
       },
       {
@@ -65,7 +69,8 @@ async function main() {
         genre: 'Уран зохиол',
         coverImageUrl: 'https://placehold.co/400x600/2c1810/ffffff?text=The%20Hobbit',
         startingPrice: 22000,
-        increment: 5000,
+        marketPrice: 38000,
+        condition: '9/10',
         origin: 'foreign' as const,
       },
       {
@@ -75,7 +80,8 @@ async function main() {
         genre: 'Хувь хүний хөгжил',
         coverImageUrl: 'https://placehold.co/400x600/1a2744/ffffff?text=Atomic%20Habits',
         startingPrice: 14000,
-        increment: 3000,
+        marketPrice: 24000,
+        condition: '8/10',
         origin: 'foreign' as const,
       },
       {
@@ -85,7 +91,8 @@ async function main() {
         genre: 'Уран зохиол',
         coverImageUrl: 'https://placehold.co/400x600/1a2744/ffffff?text=Тунгалаг+Тамир',
         startingPrice: 12000,
-        increment: 2000,
+        marketPrice: 20000,
+        condition: '9/10',
         origin: 'mongolian' as const,
       },
     ];

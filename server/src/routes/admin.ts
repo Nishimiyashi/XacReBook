@@ -1,14 +1,12 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import multer from 'multer';
-import path from 'node:path';
-import crypto from 'node:crypto';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma.js';
 import { signAdminToken } from '../lib/jwt.js';
 import { cookieOptions, TWELVE_HOURS } from '../lib/cookies.js';
 import { ADMIN_COOKIE, requireAdmin } from '../middleware/auth.js';
-import { UPLOADS_DIR } from '../lib/uploads.js';
+import { storeCoverImage } from '../lib/uploads.js';
 
 export const adminRouter = Router();
 
@@ -56,7 +54,8 @@ const bookSchema = z.object({
   origin: z.enum(['mongolian', 'foreign'], { errorMap: () => ({ message: 'Гарал үүслийг сонгоно уу' }) }),
   coverImageUrl: z.string().trim().min(1, 'Нүүр зураг оруулна уу'),
   startingPrice: z.number().int().positive('Эхлэх үнэ эерэг тоо байх ёстой'),
-  increment: z.number().int().positive('Нэмэгдэх алхам эерэг тоо байх ёстой'),
+  marketPrice: z.number().int().positive('Зах зээлийн үнэ эерэг тоо байх ёстой').nullable().optional(),
+  condition: z.string().trim().min(1).nullable().optional(),
   auctionEndsAt: z.string().datetime('Дуусах хугацаа буруу байна').nullable().optional(),
   status: z.enum(['upcoming', 'live', 'ended']).default('live'),
 });
@@ -76,7 +75,8 @@ adminRouter.post('/books', requireAdmin, async (req, res) => {
       origin: data.origin,
       coverImageUrl: data.coverImageUrl,
       startingPrice: data.startingPrice,
-      increment: data.increment,
+      marketPrice: data.marketPrice ?? null,
+      condition: data.condition ?? null,
       currentPrice: data.startingPrice,
       auctionEndsAt: data.auctionEndsAt ? new Date(data.auctionEndsAt) : null,
       status: data.status,
@@ -165,13 +165,7 @@ adminRouter.get('/books/:id/bidders', requireAdmin, async (req, res) => {
 });
 
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: UPLOADS_DIR,
-    filename: (_req, file, cb) => {
-      const ext = path.extname(file.originalname) || '.jpg';
-      cb(null, `${crypto.randomUUID()}${ext}`);
-    },
-  }),
+  storage: multer.memoryStorage(),
   limits: { fileSize: 8 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     if (!file.mimetype.startsWith('image/')) {
@@ -182,9 +176,15 @@ const upload = multer({
   },
 });
 
-adminRouter.post('/upload', requireAdmin, upload.single('cover'), (req, res) => {
+adminRouter.post('/upload', requireAdmin, upload.single('cover'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Файл байршуулаагүй байна' });
   }
-  res.status(201).json({ url: `/uploads/${req.file.filename}` });
+  try {
+    const url = await storeCoverImage(req.file);
+    res.status(201).json({ url });
+  } catch (err) {
+    console.error('Cover upload failed', err);
+    res.status(500).json({ error: 'Зураг байршуулж чадсангүй' });
+  }
 });

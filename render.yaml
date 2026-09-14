@@ -37,3 +37,13 @@ services:
         sync: false
       - key: SEED_ADMIN_PASSWORD
         sync: false
+      # Required so uploaded book covers persist: this service's local disk
+      # is wiped on every redeploy and on free-tier spin-down, so without
+      # these, admin-uploaded covers disappear. Set these in the Render
+      # dashboard from a Cloudinary account (free tier is enough).
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
