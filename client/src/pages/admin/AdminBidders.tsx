@@ -47,7 +47,7 @@ export default function AdminBidders() {
       ) : (
         <div className="space-y-2">
           <p className="mb-2 text-xs uppercase tracking-wide text-muted">
-            Хамгийн өндөр үнэ хэлснээс эхлээд утсаар холбогдож баталгаажуулна уу. Татгалзвал дараагийн хүнд залгана.
+            Хамгийн өндөр үнэ хэлснээс эхлээд утсаар холбогдож баталгаажуулна уу. Татгалзвал дараагийн хүн рүү залгана.
           </p>
           {bidders.map((bidder) => (
             <div
