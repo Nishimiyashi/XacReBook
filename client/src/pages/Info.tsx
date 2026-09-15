@@ -66,7 +66,7 @@ function JourneyDiagram() {
   return (
     <div className="mx-auto grid max-w-sm grid-cols-[1fr_2.5rem_1fr] gap-y-6">
       <div className="col-start-1 row-start-1 row-span-2 flex items-center">
-        <JourneyStep icon="book" label="Чиний уншсан ном" />
+        <JourneyStep icon="book" label="Таны уншсан ном" />
       </div>
       <svg
         className="col-start-2 row-start-1 row-span-2 block h-full w-full text-accent"
@@ -127,9 +127,11 @@ export default function Info() {
                 </blockquote>
 
                 <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-muted sm:text-base lg:mx-0">
-                  Нэгэн цагт таны ном танд өөр нэг ертөнцийн хаалгыг нээж байсан. Түүнийг хандивлах мөчид та тэр
-                  ертөнцийг дараагийн уншигчид илгээж, харин худалдаж авахдаа өөр хэн нэгний үлдээсэн ертөнцийг сонгон
-                  аяллыг нь дахин эхлүүлнэ.
+                  Нэгэн цагт таны ном танд өөр нэг ертөнцийн хаалгыг нээж байсан. Та түүний хуудсаар аялж, шинэ зүйл мэдэрч, шинэ зүйл сурсан.
+ 
+                  Харин одоо таны аялал дууссан байж болох ч, тэр номын аялал дуусаагүй.
+ 
+                Та номоо бэлэглэх мөчид өөрийн нэг ертөнцийг дараагийн хүнд илгээнэ. Харин та номын худалдаанаас өөр нэг хүний үлдээсэн ертөнцийг сонгон, түүний аяллыг дахин эхлүүлнэ.
                 </p>
               </div>
 
@@ -142,7 +144,7 @@ export default function Info() {
                   <JourneyArrow />
                   <JourneyStep icon="graduationCap" label="Хүүхдийн шинэ боломж" />
                   <JourneyArrow />
-                  <JourneyStep icon="book" label="Чиний уншсан ном" />
+                  <JourneyStep icon="book" label="Таны уншсан ном" />
                 </div>
               </div>
             </div>
@@ -181,8 +183,8 @@ export default function Info() {
               </div>
 
               <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-muted sm:mx-0 sm:text-base">
-                "Хөгжлийн Алтан Сан" Холбоо хүүхэд, залуучуудад ирээдүйд ажиллаж, амьдрахад шаардлагатай санхүүгийн
-                боловсрол, хөгжлийн боломжийг олгохыг эрхэм зорилгоо болгодог төрийн бус байгууллага юм.
+                "Хөгжлийн Алтан Сан" Холбоо хүүхэд, залуучуудад ирээдүйд ажиллаж, амьдрахад шаардлагатай санхүү 
+                болон нийгмийн боловсрол олгохыг эрхэм зорилгоо болгодог төрийн бус байгууллага билээ.
               </p>
               <a
                 href="https://xacngo.mn/about-us"

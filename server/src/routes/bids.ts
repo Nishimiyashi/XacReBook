@@ -102,8 +102,8 @@ bidsRouter.post('/:id/bids', requireAuth, bidLimiter, async (req, res) => {
     if (!result.ok) {
       const messages: Record<string, string> = {
         not_found: 'Ном олдсонгүй',
-        not_live: 'Энэ дуудлага худалдаа явагдахгүй байна',
-        ended: 'Энэ дуудлага худалдаа дууссан байна',
+        not_live: 'Энэ номын худалдаа явагдахгүй байна',
+        ended: 'Энэ номын худалдаа дууссан байна',
         too_low: `Эхлэх үнэ буюу ${'minAmount' in result ? result.minAmount.toLocaleString('en-US') : ''}₮-с багагүй байх ёстой`.trim(),
       };
       return res.status(400).json({ error: messages[result.error] });
@@ -174,7 +174,7 @@ bidsRouter.delete('/:id/bids', requireAuth, async (req, res) => {
     if (!result.ok) {
       const messages: Record<string, string> = {
         not_found: 'Ном олдсонгүй',
-        ended: 'Дууссан дуудлага худалдааны санал хэлэлцэхийг цуцлах боломжгүй',
+        ended: 'Дууссан номын худалдааны санал хэлэлцэхийг цуцлах боломжгүй',
         no_bid: 'Танд идэвхтэй санал алга байна',
       };
       return res.status(400).json({ error: messages[result.error] });

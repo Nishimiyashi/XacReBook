@@ -205,7 +205,7 @@ export default function BookDetail() {
           <div className="flex flex-1 flex-col justify-center">
             {ended ? (
               <p className="rounded-lg bg-surface-2 p-3 text-center text-sm font-semibold text-muted">
-                Энэ дуудлага худалдаа дууссан байна.
+                Энэ номын худалдаа дууссан байна.
               </p>
             ) : (
               <div className="flex max-w-2xl flex-col gap-3 sm:flex-row sm:items-start">

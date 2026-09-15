@@ -31,7 +31,7 @@ export default function AdminLogin() {
         <div className="mb-6 text-center">
           <img src="/siteIcon.png" alt="" aria-hidden="true" className="mx-auto mb-3 h-10 w-10 object-contain" />
           <h1 className="font-display text-2xl font-bold text-fg">Админ нэвтрэх</h1>
-          <p className="mt-1 text-sm text-muted">Номын каталог болон дуудлага худалдааг удирдах.</p>
+          <p className="mt-1 text-sm text-muted">Номын каталог болон номын худалдааг удирдах.</p>
         </div>
 
         <div className="space-y-4">

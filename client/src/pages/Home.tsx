@@ -58,9 +58,9 @@ export default function Home() {
               <span className="block">
                 Ном бүр өөрийн
                 <br />
-                гэсэн түүхтэй.
+                түүхтэй.
               </span>
-              <span className="mt-3 block italic text-accent">Харин энэ удаа түүний үнэ цэнийг та тодорхойлно.</span>
+              <span className="mt-3 block italic text-accent">Харин энэ удаа түүний ертөнцөөр та аялана.</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
@@ -68,7 +68,7 @@ export default function Home() {
               transition={{ delay: 0.12 }}
               className="mx-auto mt-3 max-w-xl text-sm text-muted sm:text-base lg:mx-0"
             >
-              Таны дараагийн дуртай ном энд байж магадгүй. Таалагдсан номоо сонгоод, өөрийн санал болгох үнээр дуудлага худалдаанд оролцоорой.
+              Таны сонирхсон ном энд байж магадгүй тул таалагдсан номоо сонгоод, өөрийн санал болгох үнээр номын худалдаанд оролцоорой.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 16 }}

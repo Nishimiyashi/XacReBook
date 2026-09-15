@@ -10,7 +10,7 @@ export default function Footer() {
             <span className="font-logo text-base font-bold text-fg">
               <span className="text-accent">Афлатон</span> номын аян
             </span>
-            <p className="mt-1 text-xs text-muted">Номын дуудлага худалдаа</p>
+            <p className="mt-1 text-xs text-muted">Номын худалдаа</p>
           </div>
 
           <div className="flex flex-col items-center gap-2 sm:items-start">
