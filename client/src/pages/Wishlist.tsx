@@ -33,7 +33,7 @@ export default function Wishlist() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
         <div className="mb-6">
           <h1 className="font-display text-2xl font-bold text-fg sm:text-3xl">Хадгалсан номууд</h1>
-          <p className="mt-1 text-sm text-muted">git </p>
+          <p className="mt-1 text-sm text-muted"></p>
         </div>
 
         {books.length === 0 ? (
