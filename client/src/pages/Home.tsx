@@ -149,10 +149,20 @@ export default function Home() {
           ) : (
             <>
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:hidden">
-                {featured.map((book, i) => (
+                {featured.slice(0, 6).map((book, i) => (
                   <BookCard key={book.id} book={book} index={i} />
                 ))}
               </div>
+              <Link
+                to="/library"
+                className="mt-4 flex items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-semibold text-accent transition hover:border-accent hover:bg-surface-2 lg:hidden"
+              >
+                Бүгдийг үзэх
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </Link>
               <div className="relative hidden lg:block">
                 <div ref={carouselRef} className="scrollbar-hide flex gap-4 overflow-x-auto">
                   {featured.map((book, i) => (
