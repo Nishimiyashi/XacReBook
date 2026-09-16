@@ -65,6 +65,15 @@ booksRouter.get('/', async (req, res) => {
   res.json({ books });
 });
 
+booksRouter.get('/genres', async (_req, res) => {
+  const rows = await prisma.book.findMany({
+    distinct: ['genre'],
+    select: { genre: true },
+    orderBy: { genre: 'asc' },
+  });
+  res.json({ genres: rows.map((r) => r.genre) });
+});
+
 booksRouter.get('/:id', async (req, res) => {
   const book = await prisma.book.findUnique({ where: { id: req.params.id } });
   if (!book || book.status === 'upcoming') {

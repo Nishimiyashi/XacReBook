@@ -112,7 +112,7 @@ export default function Home() {
                 transition={{ delay: 0.3 }}
                 className="absolute right-0 top-16 rounded-full bg-fg px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-bg shadow-lg sm:right-2 sm:top-20"
               >
-                Шууд дуудлага
+                Шууд худалдаа
               </motion.span>
 
               <motion.span

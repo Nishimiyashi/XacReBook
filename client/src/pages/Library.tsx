@@ -2,7 +2,7 @@ import { Children, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { api } from '../lib/api';
 import type { Book, BookOrigin } from '../types';
-import { GENRES } from '../lib/genres';
+import { useGenres } from '../lib/genres';
 import BookCard from '../components/BookCard';
 import Footer from '../components/Footer';
 import { getSocket } from '../lib/socket';
@@ -241,6 +241,7 @@ function TreeItem({
 }
 
 export default function Library() {
+  const genres = useGenres();
   const [books, setBooks] = useState<Book[]>([]);
   const [search, setSearch] = useState('');
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -387,7 +388,7 @@ export default function Library() {
                     open={openSections.genre}
                     onToggle={() => toggleSection('genre')}
                   >
-                    {GENRES.map((genre) => (
+                    {genres.map((genre) => (
                       <TreeItem
                         key={genre}
                         active={selectedGenres.includes(genre)}

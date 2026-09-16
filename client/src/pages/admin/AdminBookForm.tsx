@@ -2,7 +2,7 @@ import { useEffect, useState, type ChangeEvent, type FormEvent, type ReactNode }
 import { useNavigate, useParams } from 'react-router-dom';
 import { api, ApiError, uploadCover } from '../../lib/api';
 import type { Book } from '../../types';
-import { GENRES } from '../../lib/genres';
+import { GENRES, useGenres } from '../../lib/genres';
 
 const NEW_GENRE_VALUE = '__new__';
 
@@ -25,6 +25,7 @@ export default function AdminBookForm() {
   const isEdit = Boolean(id);
   const navigate = useNavigate();
 
+  const genres = useGenres();
   const [form, setForm] = useState(emptyForm);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -123,20 +124,20 @@ export default function AdminBookForm() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Төрөл">
             <select
-              value={(GENRES as readonly string[]).includes(form.genre) ? form.genre : NEW_GENRE_VALUE}
+              value={genres.includes(form.genre) ? form.genre : NEW_GENRE_VALUE}
               onChange={(e) =>
                 setForm((f) => ({ ...f, genre: e.target.value === NEW_GENRE_VALUE ? '' : e.target.value }))
               }
               className={inputClass}
             >
-              {GENRES.map((g) => (
+              {genres.map((g) => (
                 <option key={g} value={g}>
                   {g}
                 </option>
               ))}
               <option value={NEW_GENRE_VALUE}>+ Шинэ төрөл нэмэх</option>
             </select>
-            {!(GENRES as readonly string[]).includes(form.genre) && (
+            {!genres.includes(form.genre) && (
               <input
                 required
                 autoFocus
