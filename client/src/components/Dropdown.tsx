@@ -11,9 +11,10 @@ interface DropdownProps<T extends string> {
   options: DropdownOption<T>[];
   onChange: (value: T) => void;
   className?: string;
+  pill?: boolean;
 }
 
-export default function Dropdown<T extends string>({ value, options, onChange, className = '' }: DropdownProps<T>) {
+export default function Dropdown<T extends string>({ value, options, onChange, className = '', pill = false }: DropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -32,7 +33,9 @@ export default function Dropdown<T extends string>({ value, options, onChange, c
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-bg px-4 py-2.5 text-left text-sm text-fg transition hover:border-accent/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+        className={`flex w-full items-center justify-between gap-2 border border-border text-left text-sm text-fg transition ${
+          pill ? 'rounded-full bg-surface px-4 py-2' : 'rounded-xl bg-bg px-4 py-2.5'
+        }  hover:border-accent/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20`}
       >
         <span className="truncate">{selected?.label}</span>
         <motion.svg
@@ -56,7 +59,9 @@ export default function Dropdown<T extends string>({ value, options, onChange, c
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-30 mt-2 w-full overflow-hidden rounded-xl border border-border bg-surface py-1 shadow-xl"
+            className={`absolute z-30 mt-2 w-full overflow-hidden border border-border bg-surface py-1 shadow-xl ${
+              pill ? 'rounded-2xl' : 'rounded-xl'
+            }`}
           >
             {options.map((opt) => (
               <button

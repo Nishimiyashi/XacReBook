@@ -41,9 +41,27 @@ adminRouter.post('/logout', (_req, res) => {
   res.json({ ok: true });
 });
 
+// Demand numbers ride along with each book so the admin list can be sorted
+// and filtered by how much interest a book is actually getting.
 adminRouter.get('/books', requireAdmin, async (_req, res) => {
-  const books = await prisma.book.findMany({ orderBy: { createdAt: 'desc' } });
-  res.json({ books });
+  const [books, bidderPairs] = await Promise.all([
+    prisma.book.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: { _count: { select: { bids: true, wishlistedBy: true } } },
+    }),
+    prisma.bid.groupBy({ by: ['bookId', 'userId'] }),
+  ]);
+  const bidders = new Map<string, number>();
+  for (const pair of bidderPairs) bidders.set(pair.bookId, (bidders.get(pair.bookId) ?? 0) + 1);
+
+  res.json({
+    books: books.map(({ _count, ...book }) => ({
+      ...book,
+      bidCount: _count.bids,
+      bidderCount: bidders.get(book.id) ?? 0,
+      wishlistCount: _count.wishlistedBy,
+    })),
+  });
 });
 
 const bookSchema = z.object({

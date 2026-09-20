@@ -19,6 +19,12 @@ export interface Book {
   updatedAt: string;
 }
 
+export interface AdminBook extends Book {
+  bidCount: number;
+  bidderCount: number;
+  wishlistCount: number;
+}
+
 export interface MyBidBook extends Book {
   myBid: number;
 }
