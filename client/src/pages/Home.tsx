@@ -60,7 +60,7 @@ export default function Home() {
                 <br />
                 түүхтэй.
               </span>
-              <span className="mt-3 block italic text-accent">Харин энэ удаа түүний ертөнцөөр та аялана.</span>
+              <span className="mt-3 block italic text-accent">Харин энэ удаа түүний ертөнцөөр та аялаарай.</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 16 }}

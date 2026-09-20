@@ -7,7 +7,7 @@ import BookCard from '../components/BookCard';
 import Footer from '../components/Footer';
 import { getSocket } from '../lib/socket';
 
-type SortOption = 'newest' | 'price_asc' | 'price_desc' | 'ending_soon';
+type SortOption = 'most_bid' | 'most_wishlisted' | 'newest' | 'price_asc' | 'price_desc' | 'ending_soon';
 type OriginFilter = 'all' | BookOrigin;
 
 const ORIGIN_OPTIONS: { value: OriginFilter; label: string }[] = [
@@ -17,6 +17,8 @@ const ORIGIN_OPTIONS: { value: OriginFilter; label: string }[] = [
 ];
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: 'most_bid', label: 'Хамгийн эрэлттэй' },
+  { value: 'most_wishlisted', label: 'Хамгийн их хадгалагдсан' },
   { value: 'newest', label: 'Хамгийн шинэ' },
   { value: 'price_asc', label: 'Үнэ: багаас их рүү' },
   { value: 'price_desc', label: 'Үнэ: ихээс бага руу' },
@@ -247,7 +249,8 @@ export default function Library() {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [origin, setOrigin] = useState<OriginFilter>('all');
   const [priceRange, setPriceRange] = useState('');
-  const [sort, setSort] = useState<SortOption>('newest');
+  const [sort, setSort] = useState<SortOption>('most_bid');
+  const [total, setTotal] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [openSections, setOpenSections] = useState<Record<SectionKey, boolean>>({
@@ -274,8 +277,11 @@ export default function Library() {
 
     const timer = setTimeout(() => {
       api
-        .get<{ books: Book[] }>(`/books?${params.toString()}`)
-        .then((res) => setBooks(res.books))
+        .get<{ books: Book[]; total: number }>(`/books?${params.toString()}`)
+        .then((res) => {
+          setBooks(res.books);
+          setTotal(res.total);
+        })
         .finally(() => setLoading(false));
     }, 250);
     return () => clearTimeout(timer);
@@ -304,6 +310,11 @@ export default function Library() {
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        <div className="mb-6">
+          <h1 className="font-display text-2xl font-bold text-fg sm:text-3xl">Номын сан</h1>
+          <p className="mt-1 text-sm text-muted">{total != null ? `Нийт ${total} ном` : 'Ачааллаж байна…'}</p>
+        </div>
+
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
           <button
             onClick={() => setShowFilters((s) => !s)}

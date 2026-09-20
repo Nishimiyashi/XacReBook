@@ -8,10 +8,12 @@ export default function BookCard({
   book,
   index = 0,
   compact = false,
+  myBid,
 }: {
   book: Book;
   index?: number;
   compact?: boolean;
+  myBid?: number;
 }) {
   const navigate = useNavigate();
 
@@ -51,6 +53,16 @@ export default function BookCard({
         <p className={`font-display font-bold text-accent ${compact ? 'text-xs sm:text-sm' : 'text-sm'}`}>
           {formatPrice(book.startingPrice)}
         </p>
+        {myBid != null && (
+          <p
+            className={`mt-0.5 truncate text-[11px] font-semibold ${
+              myBid >= book.currentPrice ? 'text-emerald-500' : 'text-muted'
+            }`}
+          >
+            Таны санал: {formatPrice(myBid)}
+            {myBid >= book.currentPrice ? ' · Тэргүүлж байна' : ' · Давагдсан'}
+          </p>
+        )}
       </div>
     </motion.div>
   );

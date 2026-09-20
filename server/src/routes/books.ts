@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '../lib/prisma.js';
+import { requireAuth } from '../middleware/auth.js';
 
 export const booksRouter = Router();
 
@@ -54,15 +55,23 @@ booksRouter.get('/', async (req, res) => {
     where.currentPrice = priceFilter;
   }
 
-  let orderBy: Record<string, 'asc' | 'desc'> = { createdAt: 'desc' };
-  if (sort === 'price_asc') orderBy = { currentPrice: 'asc' };
+  // Default (no explicit sort, e.g. the homepage's "featured" strip) surfaces
+  // the most in-demand books first rather than just the newest ones.
+  const mostBidOrder = [{ bids: { _count: 'desc' } }, { createdAt: 'desc' }];
+
+  let orderBy: object = mostBidOrder;
+  if (sort === 'newest') orderBy = { createdAt: 'desc' };
+  else if (sort === 'price_asc') orderBy = { currentPrice: 'asc' };
   else if (sort === 'price_desc') orderBy = { currentPrice: 'desc' };
   else if (sort === 'ending_soon') orderBy = { auctionEndsAt: 'asc' };
+  else if (sort === 'most_bid') orderBy = mostBidOrder;
+  else if (sort === 'most_wishlisted') orderBy = [{ wishlistedBy: { _count: 'desc' } }, { createdAt: 'desc' }];
 
   const take = typeof limit === 'string' && !Number.isNaN(Number(limit)) ? Number(limit) : undefined;
 
   const books = await prisma.book.findMany({ where, orderBy, take });
-  res.json({ books });
+  const total = await prisma.book.count({ where });
+  res.json({ books, total });
 });
 
 booksRouter.get('/genres', async (_req, res) => {
@@ -72,6 +81,29 @@ booksRouter.get('/genres', async (_req, res) => {
     orderBy: { genre: 'asc' },
   });
   res.json({ genres: rows.map((r) => r.genre) });
+});
+
+// Books this user has placed a bid on, most recently bid on first — shown
+// alongside the wishlist so a bidder can find their own standing offers.
+booksRouter.get('/mine/bids', requireAuth, async (req, res) => {
+  const userId = req.userId!;
+
+  const grouped = await prisma.bid.groupBy({
+    by: ['bookId'],
+    where: { userId },
+    _max: { amount: true, createdAt: true },
+  });
+  if (grouped.length === 0) return res.json({ books: [] });
+
+  const books = await prisma.book.findMany({ where: { id: { in: grouped.map((g) => g.bookId) } } });
+  const bookMap = new Map(books.map((b) => [b.id, b]));
+
+  const results = grouped
+    .map((g) => ({ book: bookMap.get(g.bookId), myBid: g._max.amount ?? 0, lastBidAt: g._max.createdAt }))
+    .filter((r): r is { book: NonNullable<typeof r.book>; myBid: number; lastBidAt: Date | null } => Boolean(r.book))
+    .sort((a, b) => (b.lastBidAt?.getTime() ?? 0) - (a.lastBidAt?.getTime() ?? 0));
+
+  res.json({ books: results.map((r) => ({ ...r.book, myBid: r.myBid })) });
 });
 
 booksRouter.get('/:id', async (req, res) => {

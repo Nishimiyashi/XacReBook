@@ -19,6 +19,10 @@ export interface Book {
   updatedAt: string;
 }
 
+export interface MyBidBook extends Book {
+  myBid: number;
+}
+
 export type Trophy = 'gold' | 'silver' | 'bronze';
 
 export interface LeaderboardEntry {
