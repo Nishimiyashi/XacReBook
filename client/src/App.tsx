@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import ScrollManager from './components/ScrollManager';
 import Starfield from './components/Starfield';
 import AuroraBackground from './components/AuroraBackground';
 import SignInModal from './components/SignInModal';
@@ -31,7 +32,9 @@ function PublicLayout({ children }: { children: ReactNode }) {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <ScrollManager />
+      <Routes>
       <Route
         path="/"
         element={
@@ -99,5 +102,6 @@ export default function App() {
         }
       />
     </Routes>
+    </>
   );
 }

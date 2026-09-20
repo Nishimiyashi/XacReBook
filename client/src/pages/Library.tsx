@@ -1,4 +1,4 @@
-import { Children, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Children, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { api } from '../lib/api';
 import type { Book, BookOrigin } from '../types';
@@ -242,30 +242,54 @@ function TreeItem({
   );
 }
 
+interface LibraryCache {
+  books: Book[];
+  total: number | null;
+  search: string;
+  selectedGenres: string[];
+  origin: OriginFilter;
+  priceRange: string;
+  sort: SortOption;
+  showFilters: boolean;
+  openSections: Record<SectionKey, boolean>;
+}
+
+// Survives leaving the page (e.g. opening a book), so tapping back shows the
+// same books and filters instantly — which is also what lets the scroll
+// position be restored, since the page is already full height on return.
+let libraryCache: LibraryCache | null = null;
+
 export default function Library() {
   const genres = useGenres();
-  const [books, setBooks] = useState<Book[]>([]);
-  const [search, setSearch] = useState('');
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [origin, setOrigin] = useState<OriginFilter>('all');
-  const [priceRange, setPriceRange] = useState('');
-  const [sort, setSort] = useState<SortOption>('most_bid');
-  const [total, setTotal] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
-  const [openSections, setOpenSections] = useState<Record<SectionKey, boolean>>({
-    origin: false,
-    genre: true,
-    price: false,
-    sort: false,
-  });
+  const [books, setBooks] = useState<Book[]>(libraryCache?.books ?? []);
+  const [search, setSearch] = useState(libraryCache?.search ?? '');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(libraryCache?.selectedGenres ?? []);
+  const [origin, setOrigin] = useState<OriginFilter>(libraryCache?.origin ?? 'all');
+  const [priceRange, setPriceRange] = useState(libraryCache?.priceRange ?? '');
+  const [sort, setSort] = useState<SortOption>(libraryCache?.sort ?? 'most_bid');
+  const [total, setTotal] = useState<number | null>(libraryCache?.total ?? null);
+  const [loading, setLoading] = useState(!libraryCache);
+  const [showFilters, setShowFilters] = useState(libraryCache?.showFilters ?? false);
+  const [openSections, setOpenSections] = useState<Record<SectionKey, boolean>>(
+    libraryCache?.openSections ?? {
+      origin: false,
+      genre: true,
+      price: false,
+      sort: false,
+    },
+  );
+  const silentRefresh = useRef(Boolean(libraryCache));
+
+  useEffect(() => {
+    libraryCache = { books, total, search, selectedGenres, origin, priceRange, sort, showFilters, openSections };
+  }, [books, total, search, selectedGenres, origin, priceRange, sort, showFilters, openSections]);
 
   function toggleSection(key: SectionKey) {
     setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
   useEffect(() => {
-    setLoading(true);
+    if (!silentRefresh.current) setLoading(true);
     const params = new URLSearchParams();
     if (search.trim()) params.set('search', search.trim());
     if (selectedGenres.length) params.set('genre', selectedGenres.join(','));
@@ -282,7 +306,10 @@ export default function Library() {
           setBooks(res.books);
           setTotal(res.total);
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          silentRefresh.current = false;
+          setLoading(false);
+        });
     }, 250);
     return () => clearTimeout(timer);
   }, [search, selectedGenres, origin, priceRange, sort]);
