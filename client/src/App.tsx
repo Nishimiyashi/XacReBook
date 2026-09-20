@@ -24,7 +24,7 @@ function PublicLayout({ children }: { children: ReactNode }) {
       <AuroraBackground />
       <Navbar />
       <SignInModal />
-      <main className="flex min-h-[calc(100vh-4rem)] flex-col [&>*:first-child]:w-full [&>*:first-child]:flex-1">{children}</main>
+      <main className="flex min-h-[calc(100vh-4rem)] flex-col [&>*:first-child]:w-full [&>*:first-child]:grow">{children}</main>
     </>
   );
 }

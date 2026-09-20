@@ -142,7 +142,7 @@ export default function BookDetail() {
         ← Буцах
       </button>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:min-h-0 lg:flex-1 lg:grid-rows-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:min-h-0 lg:flex-1 lg:grid-rows-[minmax(0,1fr)_18rem]">
         {/* Top-left: cover, 1/3 width — shared transition from library grid */}
         <motion.div layoutId={`book-cover-${book.id}`} className="overflow-hidden rounded-2xl border border-border bg-surface-2 shadow-lg md:col-span-1 lg:min-h-0">
           <img src={book.coverImageUrl} alt={book.title} className="aspect-[2/3] w-full object-cover md:aspect-auto md:h-[22rem] lg:h-full" />
@@ -202,7 +202,7 @@ export default function BookDetail() {
             </div>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-1 flex-col justify-center">
             {ended ? (
               <p className="rounded-lg bg-surface-2 p-3 text-center text-sm font-semibold text-muted">
                 Энэ номын худалдаа дууссан байна.
