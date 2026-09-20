@@ -357,8 +357,8 @@ export default function Library() {
             )}
           </button>
 
-          <div className="order-last flex justify-center sm:order-none">
-            <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm font-semibold text-accent">
+          <div className="order-first flex sm:order-none">
+            <span className="flex w-full items-center justify-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-2 text-sm font-semibold text-accent sm:inline-flex sm:w-auto sm:py-1.5">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2" />
                 <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H19v-3" />
