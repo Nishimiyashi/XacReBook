@@ -202,7 +202,7 @@ export default function BookDetail() {
             </div>
           </div>
 
-          <div className="flex flex-1 flex-col justify-center">
+          <div className="flex flex-col">
             {ended ? (
               <p className="rounded-lg bg-surface-2 p-3 text-center text-sm font-semibold text-muted">
                 Энэ номын худалдаа дууссан байна.
