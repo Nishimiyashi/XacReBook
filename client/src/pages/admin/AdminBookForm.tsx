@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { api, ApiError, uploadCover } from '../../lib/api';
 import type { Book } from '../../types';
 import { GENRES, useGenres } from '../../lib/genres';
+import { useGoBack } from '../../lib/useGoBack';
 
 const NEW_GENRE_VALUE = '__new__';
 
@@ -24,6 +25,7 @@ export default function AdminBookForm() {
   const { id } = useParams<{ id: string }>();
   const isEdit = Boolean(id);
   const navigate = useNavigate();
+  const goBack = useGoBack('/admin/dashboard');
 
   const genres = useGenres();
   const [form, setForm] = useState(emptyForm);
@@ -84,10 +86,11 @@ export default function AdminBookForm() {
     try {
       if (isEdit) {
         await api.put(`/admin/books/${id}`, payload);
+        goBack();
       } else {
         await api.post('/admin/books', payload);
+        navigate('/admin/dashboard');
       }
-      navigate('/admin/dashboard');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Ном хадгалж чадсангүй');
     } finally {
@@ -262,7 +265,7 @@ export default function AdminBookForm() {
           >
             {submitting ? 'Хадгалж байна…' : isEdit ? 'Хадгалах' : 'Ном үүсгэх'}
           </button>
-          <button type="button" onClick={() => navigate('/admin/dashboard')} className="rounded-full border border-border px-6 py-2.5 font-semibold text-fg">
+          <button type="button" onClick={goBack} className="rounded-full border border-border px-6 py-2.5 font-semibold text-fg">
             Цуцлах
           </button>
         </div>

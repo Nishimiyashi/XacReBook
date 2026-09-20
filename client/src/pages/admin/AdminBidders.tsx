@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useGoBack } from '../../lib/useGoBack';
 import { api } from '../../lib/api';
 import type { Bidder, Book } from '../../types';
 import { formatPrice } from '../../lib/format';
 
 export default function AdminBidders() {
   const { id } = useParams<{ id: string }>();
+  const goBack = useGoBack('/admin/dashboard');
   const [book, setBook] = useState<Book | null>(null);
   const [bidders, setBidders] = useState<Bidder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,9 +28,9 @@ export default function AdminBidders() {
 
   return (
     <div>
-      <Link to="/admin/dashboard" className="mb-4 inline-block text-sm font-semibold text-muted hover:text-accent">
+      <button onClick={goBack} className="mb-4 inline-block text-sm font-semibold text-muted hover:text-accent">
         ← Номууд руу буцах
-      </Link>
+      </button>
 
       <div className="mb-6 flex items-center gap-4">
         {book && <img src={book.coverImageUrl} alt={book.title} className="h-20 w-14 rounded object-cover" />}
