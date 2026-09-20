@@ -137,22 +137,22 @@ export default function BookDetail() {
   const ended = book.status === 'ended' || (book.auctionEndsAt ? new Date(book.auctionEndsAt).getTime() < Date.now() : false);
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col px-4 py-6 sm:px-6 lg:h-[min(calc(100vh-4rem),50rem)] lg:overflow-hidden">
+    <div className="mx-auto flex max-w-6xl flex-col px-4 py-6 sm:px-6">
       <button onClick={() => navigate(-1)} className="mb-4 self-start text-sm font-semibold text-muted hover:text-accent">
         ← Буцах
       </button>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:min-h-0 lg:flex-1 lg:grid-rows-[minmax(0,1fr)_18rem]">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-rows-[repeat(2,18.5rem)]">
         {/* Top-left: cover, 1/3 width — shared transition from library grid */}
-        <motion.div layoutId={`book-cover-${book.id}`} className="overflow-hidden rounded-2xl border border-border bg-surface-2 shadow-lg md:col-span-1 lg:min-h-0">
-          <img src={book.coverImageUrl} alt={book.title} className="aspect-[2/3] w-full object-cover md:aspect-auto md:h-[22rem] lg:h-full" />
+        <motion.div layoutId={`book-cover-${book.id}`} className="overflow-hidden rounded-2xl border border-border bg-surface-2 shadow-lg md:col-span-1 lg:relative lg:min-h-0">
+          <img src={book.coverImageUrl} alt={book.title} className="aspect-[2/3] w-full object-cover md:aspect-auto md:h-[22rem] lg:absolute lg:inset-0 lg:h-full" />
         </motion.div>
 
         {/* Top-right: info, 2/3 width */}
         <motion.div
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
-          className="relative flex flex-col justify-center overflow-y-auto rounded-2xl border border-border bg-surface p-6 md:col-span-2 md:h-[22rem] md:justify-start lg:h-full"
+          className="relative flex flex-col justify-center overflow-y-auto rounded-2xl border border-border bg-surface p-6 md:col-span-2 md:h-[22rem] md:justify-start lg:h-auto lg:min-h-0"
         >
           <WishlistButton bookId={book.id} className="absolute right-4 top-4" />
           <div className="mb-2 flex flex-wrap gap-2 pr-10">
@@ -174,7 +174,7 @@ export default function BookDetail() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex flex-col rounded-2xl border border-border bg-surface p-6 md:col-span-2 lg:min-h-0"
+          className="flex flex-col overflow-y-auto rounded-2xl border border-border bg-surface p-6 md:col-span-2 lg:min-h-0"
         >
           <div className="mb-4 grid grid-cols-2 gap-x-4 gap-y-3 border-b border-border pb-4 sm:grid-cols-4">
             <div>
