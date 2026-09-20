@@ -310,11 +310,6 @@ export default function Library() {
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        <div className="mb-6">
-          <h1 className="font-display text-2xl font-bold text-fg sm:text-3xl">Номын сан</h1>
-          <p className="mt-1 text-sm text-muted">{total != null ? `Нийт ${total} ном` : 'Ачааллаж байна…'}</p>
-        </div>
-
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
           <button
             onClick={() => setShowFilters((s) => !s)}
@@ -334,6 +329,22 @@ export default function Library() {
               </span>
             )}
           </button>
+
+          <div className="order-last flex justify-center sm:order-none">
+            <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm font-semibold text-accent">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2" />
+                <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H19v-3" />
+              </svg>
+              {total != null ? (
+                <>
+                  Нийт <span className="font-display text-base font-bold">{total}</span> ном
+                </>
+              ) : (
+                'Ачааллаж байна…'
+              )}
+            </span>
+          </div>
 
           <div className="relative w-full sm:ml-auto sm:w-auto sm:max-w-sm">
             <img
