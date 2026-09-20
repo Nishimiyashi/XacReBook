@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api';
 import type { AdminBook, Book } from '../../types';
@@ -50,19 +50,39 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
   );
 }
 
+interface DashboardCache {
+  books: AdminBook[];
+  search: string;
+  demand: DemandFilter;
+  sort: AdminSort;
+}
+
+// Kept across visits (e.g. opening a book's bidders and coming back) so the
+// list, filters and search are still there and the scroll position can be
+// restored instead of starting from a blank "loading" page.
+let dashboardCache: DashboardCache | null = null;
+
 export default function AdminDashboard() {
-  const [books, setBooks] = useState<AdminBook[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [demand, setDemand] = useState<DemandFilter>('all');
-  const [sort, setSort] = useState<AdminSort>('most_bids');
+  const [books, setBooks] = useState<AdminBook[]>(dashboardCache?.books ?? []);
+  const [loading, setLoading] = useState(!dashboardCache);
+  const [search, setSearch] = useState(dashboardCache?.search ?? '');
+  const [demand, setDemand] = useState<DemandFilter>(dashboardCache?.demand ?? 'all');
+  const [sort, setSort] = useState<AdminSort>(dashboardCache?.sort ?? 'most_bids');
+  const silentLoad = useRef(Boolean(dashboardCache));
+
+  useEffect(() => {
+    dashboardCache = { books, search, demand, sort };
+  }, [books, search, demand, sort]);
 
   function load() {
-    setLoading(true);
+    if (!silentLoad.current) setLoading(true);
     api
       .get<{ books: AdminBook[] }>('/admin/books')
       .then((res) => setBooks(res.books))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        silentLoad.current = false;
+        setLoading(false);
+      });
   }
 
   useEffect(load, []);
