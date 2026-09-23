@@ -150,7 +150,7 @@ export default function Home() {
             <>
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:hidden">
                 {featured.slice(0, 6).map((book, i) => (
-                  <BookCard key={book.id} book={book} index={i} />
+                  <BookCard key={book.id} book={book} index={i} rank={i + 1} />
                 ))}
               </div>
               <Link
@@ -167,7 +167,7 @@ export default function Home() {
                 <div ref={carouselRef} className="scrollbar-hide flex gap-4 overflow-x-auto">
                   {featured.map((book, i) => (
                     <div key={book.id} className="w-44 shrink-0">
-                      <BookCard book={book} index={i} />
+                      <BookCard book={book} index={i} rank={i + 1} />
                     </div>
                   ))}
                   <Link

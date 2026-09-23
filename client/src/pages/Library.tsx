@@ -518,7 +518,7 @@ export default function Library() {
             ) : (
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
                 {books.map((book, i) => (
-                  <BookCard key={book.id} book={book} index={i} compact />
+                  <BookCard key={book.id} book={book} index={i} compact rank={sort === 'most_bid' ? i + 1 : undefined} />
                 ))}
               </div>
             )}
