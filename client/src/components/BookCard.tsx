@@ -5,23 +5,20 @@ import { formatPrice } from '../lib/format';
 import WishlistButton from './WishlistButton';
 
 // 1–3 get an actual medal color; 4–10 stay plain so the podium still stands out.
-const RANK_BADGE: Record<number, { ring: string; face: string; gloss: string; text: string }> = {
+const RANK_BADGE: Record<number, { ring: string; face: string; text: string }> = {
   1: {
     ring: 'ring-white dark:ring-navy-950',
     face: 'bg-gradient-to-br from-yellow-200 via-yellow-400 to-amber-600',
-    gloss: 'from-white/70 via-white/0',
     text: 'text-amber-950',
   },
   2: {
     ring: 'ring-white dark:ring-navy-950',
     face: 'bg-gradient-to-br from-slate-200 via-slate-300 to-slate-500',
-    gloss: 'from-white/70 via-white/0',
     text: 'text-slate-800',
   },
   3: {
     ring: 'ring-white dark:ring-navy-950',
     face: 'bg-gradient-to-br from-orange-300 via-orange-500 to-orange-800',
-    gloss: 'from-white/50 via-white/0',
     text: 'text-orange-950',
   },
 };
@@ -29,7 +26,6 @@ const RANK_BADGE: Record<number, { ring: string; face: string; gloss: string; te
 const PLAIN_RANK_BADGE = {
   ring: 'ring-white dark:ring-navy-950',
   face: 'bg-surface border border-border',
-  gloss: '',
   text: 'text-fg/80',
 };
 
@@ -54,11 +50,14 @@ export default function BookCard({
   return (
     <div className="relative h-full">
       {rank != null && medal && (
+        // Shield/ribbon silhouette (flat top, pointed bottom) via clip-path — reads as an
+        // actual badge hanging off the corner instead of just a rounded-rectangle label.
         <div
-          className={`pointer-events-none absolute -left-2 -top-2 z-20 flex h-8 w-8 items-center justify-center rounded-full shadow-lg ring-2 ${medal.ring} ${medal.face}`}
+          className={`pointer-events-none absolute -left-1.5 -top-1.5 z-20 flex justify-center px-2 pb-3 pt-1.5 shadow-lg ring-2 [clip-path:polygon(0_0,100%_0,100%_68%,50%_100%,0_68%)] ${medal.ring} ${medal.face}`}
         >
-          {medal.gloss && <span className={`absolute inset-[3px] rounded-full bg-gradient-to-br to-transparent ${medal.gloss}`} />}
-          <span className={`relative font-display text-xs font-extrabold leading-none ${medal.text}`}>{rank}</span>
+          <span className={`whitespace-nowrap font-display text-[10px] font-extrabold uppercase leading-none tracking-wide ${medal.text}`}>
+            Топ {rank}
+          </span>
         </div>
       )}
       <motion.div
