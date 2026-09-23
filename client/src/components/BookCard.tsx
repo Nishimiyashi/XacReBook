@@ -5,27 +5,24 @@ import { formatPrice } from '../lib/format';
 import WishlistButton from './WishlistButton';
 
 // 1–3 get an actual medal color; 4–10 stay plain so the podium still stands out.
-const RANK_BADGE: Record<number, { ring: string; face: string; text: string }> = {
+// Every tier gets the same accent-colored frame (see the badge markup below).
+const RANK_BADGE: Record<number, { face: string; text: string }> = {
   1: {
-    ring: 'ring-white dark:ring-navy-950',
     face: 'bg-gradient-to-br from-yellow-200 via-yellow-400 to-amber-600',
     text: 'text-amber-950',
   },
   2: {
-    ring: 'ring-white dark:ring-navy-950',
     face: 'bg-gradient-to-br from-slate-200 via-slate-300 to-slate-500',
     text: 'text-slate-800',
   },
   3: {
-    ring: 'ring-white dark:ring-navy-950',
     face: 'bg-gradient-to-br from-orange-300 via-orange-500 to-orange-800',
     text: 'text-orange-950',
   },
 };
 
 const PLAIN_RANK_BADGE = {
-  ring: 'ring-white dark:ring-navy-950',
-  face: 'bg-surface border border-border',
+  face: 'bg-surface',
   text: 'text-fg/80',
 };
 
@@ -50,14 +47,19 @@ export default function BookCard({
   return (
     <div className="relative h-full">
       {rank != null && medal && (
-        // Shield/ribbon silhouette (flat top, pointed bottom) via clip-path — reads as an
-        // actual badge hanging off the corner instead of just a rounded-rectangle label.
+        // Shield/ribbon silhouette (flat top, pointed bottom) via clip-path. A `ring` (box-shadow)
+        // would get clipped away on the angled edges, so the border is a second, inset copy of the
+        // same clipped shape instead — an outer accent-colored layer showing through as a thin frame.
         <div
-          className={`pointer-events-none absolute -left-1.5 -top-1.5 z-20 flex justify-center px-2 pb-3 pt-1.5 shadow-lg ring-2 [clip-path:polygon(0_0,100%_0,100%_68%,50%_100%,0_68%)] ${medal.ring} ${medal.face}`}
+          className="pointer-events-none absolute -left-1.5 -top-1.5 z-20 bg-accent p-px shadow-lg [clip-path:polygon(0_0,100%_0,100%_68%,50%_100%,0_68%)]"
         >
-          <span className={`whitespace-nowrap font-display text-[10px] font-extrabold uppercase leading-none tracking-wide ${medal.text}`}>
-            Топ {rank}
-          </span>
+          <div
+            className={`flex justify-center px-2 pb-3 pt-1.5 [clip-path:polygon(0_0,100%_0,100%_68%,50%_100%,0_68%)] ${medal.face}`}
+          >
+            <span className={`whitespace-nowrap font-display text-[10px] font-extrabold uppercase leading-none tracking-wide ${medal.text}`}>
+              Топ {rank}
+            </span>
+          </div>
         </div>
       )}
       <motion.div
