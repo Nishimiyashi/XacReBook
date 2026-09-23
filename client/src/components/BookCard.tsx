@@ -85,8 +85,10 @@ export default function BookCard({
           <WishlistButton bookId={book.id} size="sm" className="absolute right-1.5 top-1.5" />
         </motion.div>
         <div className={`flex flex-1 flex-col gap-0.5 ${compact ? 'p-2' : 'p-3'}`}>
+          {/* min-h reserves 2 lines' worth of space (leading-tight = 1.25 line-height) so a one-line
+              title doesn't leave the price sitting higher than it does on cards with a two-line title. */}
           <h3
-            className={`line-clamp-2 font-display font-semibold leading-tight text-fg ${
+            className={`line-clamp-2 min-h-[2.5em] font-display font-semibold leading-tight text-fg ${
               compact ? 'text-xs sm:text-sm' : 'text-base'
             }`}
           >
