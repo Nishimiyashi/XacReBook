@@ -163,8 +163,11 @@ export default function Home() {
                   <path d="m13 6 6 6-6 6" />
                 </svg>
               </Link>
-              <div className="relative hidden lg:block">
-                <div ref={carouselRef} className="scrollbar-hide flex gap-4 overflow-x-auto">
+              <div className="relative -mt-3 hidden lg:block">
+                {/* pt-3 reserves room above the cards for the rank badge, which pokes above the
+                    card's own top edge — overflow-x-auto here also clips overflow-y, so without
+                    this padding that badge gets cut off instead of overlapping the corner. */}
+                <div ref={carouselRef} className="scrollbar-hide flex gap-4 overflow-x-auto pt-3">
                   {featured.map((book, i) => (
                     <div key={book.id} className="w-44 shrink-0">
                       <BookCard book={book} index={i} rank={i + 1} />
