@@ -6,6 +6,9 @@ import { formatPrice } from '../../lib/format';
 import Dropdown from '../../components/Dropdown';
 import { buildAdminReportHtml, type ReportBid, type ReportData } from '../../lib/buildAdminReport';
 
+// Temporarily hidden from the dashboard UI — set to true to bring the button back.
+const SHOW_REPORT_BUTTON = false;
+
 const STATUS_STYLES: Record<Book['status'], string> = {
   upcoming: 'bg-slate-400/10 text-slate-500',
   live: 'bg-emerald-400/10 text-emerald-500',
@@ -173,18 +176,21 @@ export default function AdminDashboard() {
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-2xl font-bold text-fg">Хянах самбар</h1>
-        <button
-          onClick={handleDownloadReport}
-          disabled={reportLoading}
-          className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-4 py-2 text-sm font-semibold text-accent transition hover:bg-accent hover:text-accent-fg disabled:opacity-60"
-        >
-          <Icon>
-            <path d="M12 3v12" />
-            <path d="m7 10 5 5 5-5" />
-            <path d="M5 21h14" />
-          </Icon>
-          {reportLoading ? 'Бэлдэж байна…' : 'HTML тайлан татах'}
-        </button>
+        {/* Temporarily hidden — flip to true to bring the report button back. Handler/generator code is untouched. */}
+        {SHOW_REPORT_BUTTON && (
+          <button
+            onClick={handleDownloadReport}
+            disabled={reportLoading}
+            className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-4 py-2 text-sm font-semibold text-accent transition hover:bg-accent hover:text-accent-fg disabled:opacity-60"
+          >
+            <Icon>
+              <path d="M12 3v12" />
+              <path d="m7 10 5 5 5-5" />
+              <path d="M5 21h14" />
+            </Icon>
+            {reportLoading ? 'Бэлдэж байна…' : 'HTML тайлан татах'}
+          </button>
+        )}
       </div>
 
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
