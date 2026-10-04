@@ -4,6 +4,7 @@ import { api } from '../../lib/api';
 import type { AdminBook, Book } from '../../types';
 import { formatPrice } from '../../lib/format';
 import Dropdown from '../../components/Dropdown';
+import { buildAdminReportHtml, type ReportBid, type ReportData } from '../../lib/buildAdminReport';
 
 const STATUS_STYLES: Record<Book['status'], string> = {
   upcoming: 'bg-slate-400/10 text-slate-500',
@@ -68,6 +69,7 @@ export default function AdminDashboard() {
   const [search, setSearch] = useState(dashboardCache?.search ?? '');
   const [demand, setDemand] = useState<DemandFilter>(dashboardCache?.demand ?? 'all');
   const [sort, setSort] = useState<AdminSort>(dashboardCache?.sort ?? 'most_bids');
+  const [reportLoading, setReportLoading] = useState(false);
   const silentLoad = useRef(Boolean(dashboardCache));
 
   useEffect(() => {
@@ -91,6 +93,34 @@ export default function AdminDashboard() {
     if (!confirm(`"${title}"-г устгах уу? Энэ үйлдлийг буцаах боломжгүй.`)) return;
     await api.delete(`/admin/books/${id}`);
     load();
+  }
+
+  async function handleDownloadReport() {
+    setReportLoading(true);
+    try {
+      const res = await api.get<ReportData & { bids: ReportBid[] }>('/admin/report-data');
+      // Locally-uploaded covers are stored as relative "/uploads/…" paths, which only resolve
+      // while the page is served from our own origin — once this report is saved and opened as
+      // a standalone file, that relative path would point at the browser's local filesystem
+      // instead. Resolving to absolute URLs up front keeps the covers working wherever it's opened.
+      const books = res.books.map((book) => ({
+        ...book,
+        coverImageUrl: new URL(book.coverImageUrl, window.location.origin).href,
+      }));
+      const html = buildAdminReportHtml({ ...res, books });
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `aflaton-tailan-${stamp}.html`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } finally {
+      setReportLoading(false);
+    }
   }
 
   const stats = useMemo(
@@ -141,6 +171,22 @@ export default function AdminDashboard() {
 
   return (
     <div>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-display text-2xl font-bold text-fg">Хянах самбар</h1>
+        <button
+          onClick={handleDownloadReport}
+          disabled={reportLoading}
+          className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-4 py-2 text-sm font-semibold text-accent transition hover:bg-accent hover:text-accent-fg disabled:opacity-60"
+        >
+          <Icon>
+            <path d="M12 3v12" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M5 21h14" />
+          </Icon>
+          {reportLoading ? 'Бэлдэж байна…' : 'HTML тайлан татах'}
+        </button>
+      </div>
+
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Нийт ном" value={stats.total} />
         <StatCard label="Нийт санал" value={stats.bids} />

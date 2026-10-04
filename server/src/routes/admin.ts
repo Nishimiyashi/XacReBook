@@ -182,6 +182,46 @@ adminRouter.get('/books/:id/bidders', requireAdmin, async (req, res) => {
   });
 });
 
+// Everything the HTML report needs in one round trip: every book (with its
+// demand counts, same as the dashboard list) plus every bid ever placed,
+// each carrying its book title and bidder name so the report can build its
+// own charts, leaderboards and per-book bidder breakdowns client-side
+// without further requests.
+adminRouter.get('/report-data', requireAdmin, async (_req, res) => {
+  const [books, bidderPairs, bids] = await Promise.all([
+    prisma.book.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: { _count: { select: { bids: true, wishlistedBy: true } } },
+    }),
+    prisma.bid.groupBy({ by: ['bookId', 'userId'] }),
+    prisma.bid.findMany({
+      include: { user: true, book: { select: { title: true } } },
+      orderBy: { createdAt: 'asc' },
+    }),
+  ]);
+  const bidderCounts = new Map<string, number>();
+  for (const pair of bidderPairs) bidderCounts.set(pair.bookId, (bidderCounts.get(pair.bookId) ?? 0) + 1);
+
+  res.json({
+    generatedAt: new Date().toISOString(),
+    books: books.map(({ _count, ...book }) => ({
+      ...book,
+      bidCount: _count.bids,
+      bidderCount: bidderCounts.get(book.id) ?? 0,
+      wishlistCount: _count.wishlistedBy,
+    })),
+    bids: bids.map((b) => ({
+      id: b.id,
+      bookId: b.bookId,
+      bookTitle: b.book.title,
+      amount: b.amount,
+      createdAt: b.createdAt,
+      userName: b.user.name,
+      userPhone: b.user.phone,
+    })),
+  });
+});
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 8 * 1024 * 1024 },
