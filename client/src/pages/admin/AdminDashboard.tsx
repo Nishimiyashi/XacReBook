@@ -6,8 +6,17 @@ import { formatPrice } from '../../lib/format';
 import Dropdown from '../../components/Dropdown';
 import { buildAdminReportHtml, type ReportBid, type ReportData } from '../../lib/buildAdminReport';
 
-// Temporarily hidden from the dashboard UI — set to true to bring the button back.
-const SHOW_REPORT_BUTTON = false;
+// ============================================================
+// HTML REPORT BUTTON — show/hide switch
+// To turn the "HTML тайлан татах" button on the dashboard back
+// on or off, change the line below:
+//   'on'  → button is visible, admins can download the report
+//   'off' → button is hidden (nothing else is affected — the
+//           report generator and download logic are untouched
+//           and start working again the moment this is 'on')
+// ============================================================
+const REPORT_BUTTON = 'off' as 'on' | 'off';
+const SHOW_REPORT_BUTTON = REPORT_BUTTON === 'on';
 
 const STATUS_STYLES: Record<Book['status'], string> = {
   upcoming: 'bg-slate-400/10 text-slate-500',
